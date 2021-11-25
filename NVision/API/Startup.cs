@@ -1,6 +1,7 @@
 using API.Security;
 using Core.Contexts;
 using Core.Repositories;
+using Infrastructure.Convertors;
 using Infrastructure.DTOs;
 using Infrastructure.Services;
 using Microsoft.AspNetCore.Builder;
@@ -42,13 +43,16 @@ namespace API
 
             // Contexts 
             services.AddDbContext<NVisionDbContext>(x =>
-                x.UseSqlServer(Configuration.GetConnectionString("EnergyPlatformConnProd")));
+                x.UseSqlServer(Configuration.GetConnectionString("NVisionConnStr")));
 
             // Repositories 
             services.AddRepositories();
 
             // App Services 
             services.AddServices();
+
+            // Convertors
+            services.AddConvertors();
 
             // JWT
             services.AddJwt(

@@ -6,7 +6,7 @@ namespace Infrastructure.Services
     {
         public static void AddServices(this IServiceCollection services)
         {
-
+            services.AddScoped<IDataGeneratorService, DataGeneratorService>();
         }
     }
 }
