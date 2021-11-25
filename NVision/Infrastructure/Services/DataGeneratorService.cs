@@ -2,7 +2,6 @@
 using Core.Repositories;
 using Infrastructure.Convertors;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -30,8 +29,8 @@ namespace Infrastructure.Services
         {
             if (!(await _sensorMeasurementRepository.SelectAllAsync()).Any())
             {
-                //await GenerateWatchers();
-                //await GenerateSubjects();
+                await GenerateWatchers();
+                await GenerateSubjects();
                 await GenerateSensorMeasurements();
             }
         }
