@@ -8,5 +8,6 @@ namespace Core.Models
         [InverseProperty("Watcher")]
         public IEnumerable<Subject> Subjects { get; set; }
         public new UserType UserType { get; } = UserType.Watcher;
+        public string PhoneNumber { get; set; }
     }
 }

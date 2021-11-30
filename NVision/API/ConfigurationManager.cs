@@ -32,6 +32,26 @@ namespace API
         {
             return IsDevelopmentEnv ? AppSetting["JWS-Dev:audienceAddress"] : AppSetting["JWS-Prod:audienceAddress"];
         }
+
+        public static string GetAccountSid()
+        {
+            return AppSetting["Twilio:accountSid"];
+        }
+
+        public static string GetAuthToken()
+        {
+            return AppSetting["Twilio:authToken"];
+        }
+
+        public static string GetSenderPhoneNumber()
+        {
+            return AppSetting["Twilio:senderPhone"];
+        }
+
+        public static string GetReceiverPhoneNumber()
+        {
+            return AppSetting["Twilio:receiverPhone"];
+        }
     }
 
 }

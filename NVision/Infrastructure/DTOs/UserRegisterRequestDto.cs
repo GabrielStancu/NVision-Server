@@ -1,12 +1,12 @@
 ﻿using System;
 
-namespace Core.Models
+namespace Infrastructure.DTOs
 {
-    public class User : Model
+    public class UserRegisterRequestDto
     {
         public string Username { get; set; }
         public string Password { get; set; }
-        public UserType UserType { get; }
+        public string RepeatedPassword { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public DateTime Birthday { get; set; }

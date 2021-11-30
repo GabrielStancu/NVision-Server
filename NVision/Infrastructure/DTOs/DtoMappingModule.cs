@@ -1,13 +1,16 @@
 ﻿using AutoMapper;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Core.Models;
 
 namespace Infrastructure.DTOs
 {
     public class DtoMappingModule : Profile
     {
+        public DtoMappingModule()
+        {
+            CreateMap<Watcher, LoginResultDto>();
+            CreateMap<Subject, LoginResultDto>();
+            CreateMap<WatcherRegisterRequestDto, Watcher>();
+            CreateMap<SubjectRegisterRequestDto, Subject>();
+        }
     }
 }

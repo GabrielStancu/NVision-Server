@@ -29,8 +29,8 @@ namespace Infrastructure.Services
         {
             if (!(await _sensorMeasurementRepository.SelectAllAsync()).Any())
             {
-                await GenerateWatchers();
-                await GenerateSubjects();
+                //await GenerateWatchers();
+                //await GenerateSubjects();
                 await GenerateSensorMeasurements();
             }
         }
@@ -94,9 +94,9 @@ namespace Infrastructure.Services
                 foreach (SensorType sensorType in Enum.GetValues(typeof(SensorType)))
                 {
                     double lastMeasurement = new Random().NextDouble() * 30;
-                    DateTime crtDate = new DateTime(2021, 11, 24, 0, 0, 0);
-                    DateTime endDate = new DateTime(2021, 11, 30, 23, 59, 59);
-                    TimeSpan sensorMeasurementPeriod = new TimeSpan(0, 5, 0);
+                    DateTime crtDate = new DateTime(2021, 11, 01, 12, 0, 0);
+                    DateTime endDate = new DateTime(2021, 12, 30, 23, 59, 59);
+                    TimeSpan sensorMeasurementPeriod = new TimeSpan(1, 0, 0, 0);
 
                     while (crtDate < endDate)
                     {
