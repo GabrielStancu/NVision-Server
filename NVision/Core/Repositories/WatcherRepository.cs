@@ -25,5 +25,11 @@ namespace Core.Repositories
 
             return watcher != null;
         }
+
+        public async Task<string> GetWatcherPhoneNumberByIdAsync(int id)
+        {
+            var watcher = await SelectByIdAsync(id);
+            return watcher.PhoneNumber;
+        }
     }
 }

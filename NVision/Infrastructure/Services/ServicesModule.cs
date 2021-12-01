@@ -9,6 +9,7 @@ namespace Infrastructure.Services
             services.AddScoped<IDataGeneratorService, DataGeneratorService>();
             services.AddScoped<ILoginService, LoginService>();
             services.AddScoped<IRegisterService, RegisterService>();
+            services.AddScoped<IAlertingService, AlertingService>();
         }
     }
 }

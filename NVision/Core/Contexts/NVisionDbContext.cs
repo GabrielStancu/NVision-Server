@@ -21,5 +21,6 @@ namespace Core.Contexts
         public DbSet<GsrSensorMeasurement> GsrSensorMeasurement { get; set; }
         public DbSet<PulseOxygenHeartRateSensorMeasurement> PulseOxygenHeartRateSensorMeasurement { get; set; }
         public DbSet<TemperatureSensorMeasurement> TemperatureSensorMeasurement { get; set; }
+        public DbSet<Alert> Alert { get; set; }
     }
 }

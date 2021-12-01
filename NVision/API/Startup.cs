@@ -1,3 +1,4 @@
+using API.Hubs;
 using API.Security;
 using Core.Contexts;
 using Core.Repositories;
@@ -44,6 +45,9 @@ namespace API
             // Contexts 
             services.AddDbContext<NVisionDbContext>(x =>
                 x.UseSqlServer(Configuration.GetConnectionString("NVisionConnStr")));
+
+            // SignalR
+            services.AddSignalR();
 
             // Repositories 
             services.AddRepositories();
@@ -92,6 +96,7 @@ namespace API
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapHub<AlertHub>("/alert");
             });
 
             app.UseSwagger();

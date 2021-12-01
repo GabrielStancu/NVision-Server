@@ -10,6 +10,7 @@ namespace Core.Repositories
             services.AddScoped<ISensorMeasurementRepository, SensorMeasurementRepository>();
             services.AddScoped<IWatcherRepository, WatcherRepository>();
             services.AddScoped<ISubjectRepository, SubjectRepository>();
+            services.AddScoped<IAlertRepository, AlertRepository>();
         }
     }
 }

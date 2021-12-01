@@ -7,5 +7,6 @@ namespace Core.Repositories
     {
         Task<Watcher> LoginAsync(string username, string password);
         Task<bool> ExistsUserAsync(string username);
+        Task<string> GetWatcherPhoneNumberByIdAsync(int id);
     }
 }
