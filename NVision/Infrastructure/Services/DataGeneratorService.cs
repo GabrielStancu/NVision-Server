@@ -29,8 +29,8 @@ namespace Infrastructure.Services
         {
             if (!(await _sensorMeasurementRepository.SelectAllAsync()).Any())
             {
-                //await GenerateWatchers();
-                //await GenerateSubjects();
+                await GenerateWatchers();
+                await GenerateSubjects();
                 await GenerateSensorMeasurements();
             }
         }

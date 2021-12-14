@@ -1,6 +1,9 @@
 ﻿using Core.Contexts;
 using Core.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Core.Repositories
@@ -23,6 +26,29 @@ namespace Core.Repositories
                 .FirstOrDefaultAsync(s => s.Username.Equals(username));
 
             return subject != null;
+        }
+
+        public async Task<IEnumerable<Subject>> GetWatcherSubjectsAsync(int watcherId)
+        {
+            return await Context.Subject
+                .Where(s => s.WatcherId == watcherId)
+                .ToListAsync();
+        }
+
+        public async Task<Subject> GetSubjectWithMeasurementsAsync(int subjectId)
+        {
+            return await Context.Subject
+                .Include(s => s.SensorMeasurements)
+                .FirstOrDefaultAsync(s => s.Id == subjectId);
+        }
+
+        public async Task<int> GetWatcherSubjectsCount(int watcherId)
+        {
+            var subjects = await Context.Subject
+                .Where(s => s.WatcherId == watcherId)
+                .ToListAsync();
+
+            return subjects.Count;
         }
     }
 }

@@ -10,6 +10,7 @@ namespace Infrastructure.Services
             services.AddScoped<ILoginService, LoginService>();
             services.AddScoped<IRegisterService, RegisterService>();
             services.AddScoped<IAlertingService, AlertingService>();
+            services.AddScoped<IWatcherDataService, WatcherDataService>();
         }
     }
 }

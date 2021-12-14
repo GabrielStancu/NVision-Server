@@ -14,5 +14,7 @@ namespace Core.Models
         [InverseProperty("Subject")]
         public IEnumerable<SensorMeasurement> SensorMeasurements { get; set; }
         public bool IsPatient { get; set; }
+        public char Sex { get; set; }
+        public string HealthStatus { get; set; }
     }
 }

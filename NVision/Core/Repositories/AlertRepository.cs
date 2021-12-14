@@ -1,5 +1,9 @@
 ﻿using Core.Contexts;
 using Core.Models;
+using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Core.Repositories
 {
@@ -7,6 +11,13 @@ namespace Core.Repositories
     {
         public AlertRepository(NVisionDbContext context) : base(context)
         {
+        }
+
+        public async Task<IEnumerable<Alert>> GetWatcherAlerts(int watcherId)
+        {
+            return await Context.Alert
+                .Where(a => a.WatcherId == watcherId)
+                .ToListAsync();
         }
     }
 }

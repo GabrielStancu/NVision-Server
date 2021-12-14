@@ -4,14 +4,16 @@ using Core.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Core.Migrations
 {
     [DbContext(typeof(NVisionDbContext))]
-    partial class NVisionDbContextModelSnapshot : ModelSnapshot
+    [Migration("20211213232737_AddedSubjectFields")]
+    partial class AddedSubjectFields
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -35,14 +37,9 @@ namespace Core.Migrations
                     b.Property<bool?>("WasTrueAlert")
                         .HasColumnType("bit");
 
-                    b.Property<int>("WatcherId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
                     b.HasIndex("SubjectId");
-
-                    b.HasIndex("WatcherId");
 
                     b.ToTable("Alert");
                 });
@@ -201,15 +198,7 @@ namespace Core.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Core.Models.Watcher", "Watcher")
-                        .WithMany()
-                        .HasForeignKey("WatcherId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("Subject");
-
-                    b.Navigation("Watcher");
                 });
 
             modelBuilder.Entity("Core.Models.SensorMeasurement", b =>

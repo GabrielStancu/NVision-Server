@@ -29,6 +29,7 @@ namespace Infrastructure.Services
             var alert = new Alert
             {
                 SubjectId = subject.Id,
+                WatcherId = subject.WatcherId,
                 Message = message,
                 WasTrueAlert = null
             };           
