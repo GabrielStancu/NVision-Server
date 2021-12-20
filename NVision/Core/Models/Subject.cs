@@ -16,5 +16,7 @@ namespace Core.Models
         public bool IsPatient { get; set; }
         public char Sex { get; set; }
         public string HealthStatus { get; set; }
+        [NotMapped]
+        public string FullName { get => $"{FirstName} {LastName}"; }
     }
 }

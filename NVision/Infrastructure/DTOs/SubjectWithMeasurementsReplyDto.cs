@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Infrastructure.DTOs
 {
-    public class SubjectWithMeasurementsDto
+    public class SubjectWithMeasurementsReplyDto
     {
         public int Id { get; set; }
         public string Username { get; set; }

@@ -2,7 +2,7 @@
 
 namespace Infrastructure.DTOs
 {
-    public class WatcherHomepageDataDto
+    public class WatcherHomepageDataReplyDto
     {
         public IEnumerable<SubjectWithoutMeasurementsDto> Subjects { get; set; }
         public int SubjectsCount { get; set; }

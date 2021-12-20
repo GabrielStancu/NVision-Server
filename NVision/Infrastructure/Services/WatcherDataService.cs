@@ -2,6 +2,7 @@
 using Core.Models;
 using Core.Repositories;
 using Infrastructure.DTOs;
+using Infrastructure.Filtering.Filters;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -12,24 +13,33 @@ namespace Infrastructure.Services
         private readonly ISubjectRepository _subjectRepository;
         private readonly IAlertRepository _alertRepository;
         private readonly IMapper _mapper;
+        private readonly IAlertFilter _alertFilter;
+        private readonly ISensorMeasurementFilter _sensorMeasurementFilter;
+        private readonly ISubjectFilter _subjectFilter;
 
         public WatcherDataService(
             ISubjectRepository subjectRepository, 
             IAlertRepository alertRepository,
-            IMapper mapper)
+            IMapper mapper,
+            IAlertFilter alertFilter,
+            ISensorMeasurementFilter sensorMeasurementFilter,
+            ISubjectFilter subjectFilter)
         {
             _subjectRepository = subjectRepository;
             _alertRepository = alertRepository;
             _mapper = mapper;
+            _alertFilter = alertFilter;
+            _sensorMeasurementFilter = sensorMeasurementFilter;
+            _subjectFilter = subjectFilter;
         }
 
-        public async Task<WatcherHomepageDataDto> GetWatcherHomepageDataAsync(int watcherId)
+        public async Task<WatcherHomepageDataReplyDto> GetWatcherHomepageDataAsync(WatcherHomepageDataRequestDto request)
         {
-            var subjects = await GetSubjectsAsync(watcherId);
-            var alerts = await GetAlertsAsync(watcherId);
-            int subjectsCount = await GetSubjectsCount(watcherId);
+            var subjects = await GetSubjectsAsync(request);
+            var alerts = await GetAlertsAsync(request);
+            int subjectsCount = await GetSubjectsCount(request.WatcherId);
 
-            return new WatcherHomepageDataDto
+            return new WatcherHomepageDataReplyDto
             {
                 Alerts = alerts,
                 Subjects = subjects,
@@ -37,18 +47,20 @@ namespace Infrastructure.Services
             };
         }
 
-        public async Task<SubjectWithMeasurementsDto> GetSubjectWithMeasurementsAsync(int subjectId)
+        public async Task<SubjectWithMeasurementsReplyDto> GetSubjectWithMeasurementsAsync(SubjectWithMeasurementsRequestDto request)
         {
-            var subject = await _subjectRepository.GetSubjectWithMeasurementsAsync(subjectId);
+            var subject = await _subjectRepository.GetSubjectWithMeasurementsAsync(request.SubjectId);
+            subject.SensorMeasurements = _sensorMeasurementFilter.Filter(subject.SensorMeasurements, request.SensorMeasurementSpecificationDto);
 
-            return _mapper.Map<Subject, SubjectWithMeasurementsDto>(subject);
+            return _mapper.Map<Subject, SubjectWithMeasurementsReplyDto>(subject);
         }
 
-        private async Task<IEnumerable<SubjectWithoutMeasurementsDto>> GetSubjectsAsync(int watcherId)
+        private async Task<IEnumerable<SubjectWithoutMeasurementsDto>> GetSubjectsAsync(WatcherHomepageDataRequestDto request)
         {
-            var subjects = await _subjectRepository.GetWatcherSubjectsAsync(watcherId);
+            var subjects = await _subjectRepository.GetWatcherSubjectsAsync(request.WatcherId);
             var subjectsWithoutMeasurements = new List<SubjectWithoutMeasurementsDto>();
 
+            subjects = _subjectFilter.Filter(subjects, request.SubjectSpecificationDto);
             foreach (var subject in subjects)
             {
                 subjectsWithoutMeasurements.Add(_mapper.Map<Subject, SubjectWithoutMeasurementsDto>(subject));
@@ -57,11 +69,12 @@ namespace Infrastructure.Services
             return subjectsWithoutMeasurements;
         }
 
-        private async Task<IEnumerable<AlertDto>> GetAlertsAsync(int watcherId)
+        private async Task<IEnumerable<AlertDto>> GetAlertsAsync(WatcherHomepageDataRequestDto request)
         {
-            var alerts = await _alertRepository.GetWatcherAlerts(watcherId);
+            var alerts = await _alertRepository.GetUnansweredWatcherAlerts(request.WatcherId);
             var alertsDto = new List<AlertDto>();
 
+            alerts = _alertFilter.Filter(alerts, request.AlertSpecificationDto);
             foreach (var alert in alerts)
             {
                 alertsDto.Add(_mapper.Map<Alert, AlertDto>(alert));

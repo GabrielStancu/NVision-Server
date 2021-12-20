@@ -4,6 +4,7 @@ using Core.Contexts;
 using Core.Repositories;
 using Infrastructure.Convertors;
 using Infrastructure.DTOs;
+using Infrastructure.Filtering;
 using Infrastructure.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -63,6 +64,9 @@ namespace API
                 ConfigurationManager.GetIssuer(),
                 ConfigurationManager.GetAudience(),
                 ConfigurationManager.GetKey());
+
+            // Filtering
+            services.AddFiltering();
 
 
             // Controllers

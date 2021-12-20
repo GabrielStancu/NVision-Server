@@ -13,7 +13,7 @@ namespace Infrastructure.DTOs
             CreateMap<WatcherRegisterRequestDto, Watcher>();
             CreateMap<SubjectRegisterRequestDto, Subject>();
             CreateMap<Subject, SubjectWithoutMeasurementsDto>();
-            CreateMap<Subject, SubjectWithMeasurementsDto>();
+            CreateMap<Subject, SubjectWithMeasurementsReplyDto>();
             CreateMap<AirflowSensorMeasurement, SensorMeasurementDto>()
                 .ForMember(dest => dest.SensorName, 
                     map => map.MapFrom(

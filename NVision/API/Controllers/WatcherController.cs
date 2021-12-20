@@ -17,18 +17,18 @@ namespace API.Controllers
             _watcherDataService = watcherDataService;
         }
 
-        [HttpGet("{watcherId}")]
-        public async Task<ActionResult<IEnumerable<SubjectWithoutMeasurementsDto>>> GetWatcherHomepageData(int watcherId)
+        [HttpPost("watcherData")]
+        public async Task<ActionResult<IEnumerable<SubjectWithoutMeasurementsDto>>> GetWatcherHomepageData(WatcherHomepageDataRequestDto request)
         {
-            var watcherHomepageData = await _watcherDataService.GetWatcherHomepageDataAsync(watcherId);
+            var watcherHomepageData = await _watcherDataService.GetWatcherHomepageDataAsync(request);
 
             return Ok(watcherHomepageData);
         }
 
-        [HttpGet("subject/{subjectId}")]
-        public async Task<ActionResult<SubjectWithMeasurementsDto>> GetSubjectWithMeasurements(int subjectId)
+        [HttpPost("subjectData")]
+        public async Task<ActionResult<SubjectWithMeasurementsReplyDto>> GetSubjectWithMeasurements(SubjectWithMeasurementsRequestDto request)
         {
-            var subjectWithMeasurements = await _watcherDataService.GetSubjectWithMeasurementsAsync(subjectId);
+            var subjectWithMeasurements = await _watcherDataService.GetSubjectWithMeasurementsAsync(request);
 
             return Ok(subjectWithMeasurements);
         }

@@ -13,10 +13,10 @@ namespace Core.Repositories
         {
         }
 
-        public async Task<IEnumerable<Alert>> GetWatcherAlerts(int watcherId)
+        public async Task<IEnumerable<Alert>> GetUnansweredWatcherAlerts(int watcherId)
         {
             return await Context.Alert
-                .Where(a => a.WatcherId == watcherId)
+                .Where(a => a.WatcherId == watcherId && a.WasTrueAlert == null)
                 .ToListAsync();
         }
     }
