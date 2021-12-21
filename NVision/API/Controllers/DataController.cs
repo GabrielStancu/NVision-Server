@@ -8,16 +8,18 @@ namespace API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class WatcherController : ControllerBase
+    public class DataController : ControllerBase
     {
         private readonly IWatcherDataService _watcherDataService;
+        private readonly ISubjectDataService _subjectDataService;
 
-        public WatcherController(IWatcherDataService watcherDataService)
+        public DataController(IWatcherDataService watcherDataService, ISubjectDataService subjectDataService)
         {
             _watcherDataService = watcherDataService;
+            _subjectDataService = subjectDataService;
         }
 
-        [HttpPost("watcherData")]
+        [HttpPost("watcher")]
         public async Task<ActionResult<IEnumerable<SubjectWithoutMeasurementsDto>>> GetWatcherHomepageData(WatcherHomepageDataRequestDto request)
         {
             var watcherHomepageData = await _watcherDataService.GetWatcherHomepageDataAsync(request);
@@ -25,12 +27,20 @@ namespace API.Controllers
             return Ok(watcherHomepageData);
         }
 
-        [HttpPost("subjectData")]
+        [HttpPost("subject")]
         public async Task<ActionResult<SubjectWithMeasurementsReplyDto>> GetSubjectWithMeasurements(SubjectWithMeasurementsRequestDto request)
         {
-            var subjectWithMeasurements = await _watcherDataService.GetSubjectWithMeasurementsAsync(request);
+            var subjectWithMeasurements = await _subjectDataService.GetSubjectWithMeasurementsAsync(request);
 
             return Ok(subjectWithMeasurements);
+        }
+
+        [HttpPost("alert")]
+        public async Task<ActionResult> AnswerAndGetNextAlert(AlertAnswerDto alertAnswerDto)
+        {
+            var nextAlert = await _watcherDataService.AnswerAndGetNextAlertAsync(alertAnswerDto);
+
+            return Ok(nextAlert);
         }
     }
 }

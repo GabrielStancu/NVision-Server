@@ -19,5 +19,16 @@ namespace Core.Repositories
                 .Where(a => a.WatcherId == watcherId && a.WasTrueAlert == null)
                 .ToListAsync();
         }
+
+        public async Task<Alert> AnswerAndGetNextAlertAsync(int alertId, bool wasAlertAccurate)
+        {
+            var alert = await SelectByIdAsync(alertId);
+            alert.WasTrueAlert = wasAlertAccurate;
+            await UpdateAsync(alert);
+
+            var nextAlert = await Context.Alert
+                .FirstOrDefaultAsync(a => a.WasTrueAlert == null && a.Id < alertId);
+            return nextAlert;
+        }
     }
 }

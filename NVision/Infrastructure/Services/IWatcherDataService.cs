@@ -5,7 +5,7 @@ namespace Infrastructure.Services
 {
     public interface IWatcherDataService
     {
-        Task<SubjectWithMeasurementsReplyDto> GetSubjectWithMeasurementsAsync(SubjectWithMeasurementsRequestDto request);
         Task<WatcherHomepageDataReplyDto> GetWatcherHomepageDataAsync(WatcherHomepageDataRequestDto request);
+        Task<AlertDto> AnswerAndGetNextAlertAsync(AlertAnswerDto alertAnswerDto);
     }
 }

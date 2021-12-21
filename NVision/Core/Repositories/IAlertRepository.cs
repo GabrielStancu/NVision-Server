@@ -7,5 +7,6 @@ namespace Core.Repositories
     public interface IAlertRepository : IGenericRepository<Alert>
     {
         Task<IEnumerable<Alert>> GetUnansweredWatcherAlerts(int watcherId);
+        Task<Alert> AnswerAndGetNextAlertAsync(int alertId, bool wasAlertAccurate);
     }
 }

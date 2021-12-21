@@ -47,12 +47,11 @@ namespace Infrastructure.Services
             };
         }
 
-        public async Task<SubjectWithMeasurementsReplyDto> GetSubjectWithMeasurementsAsync(SubjectWithMeasurementsRequestDto request)
+        public async Task<AlertDto> AnswerAndGetNextAlertAsync(AlertAnswerDto alertAnswerDto)
         {
-            var subject = await _subjectRepository.GetSubjectWithMeasurementsAsync(request.SubjectId);
-            subject.SensorMeasurements = _sensorMeasurementFilter.Filter(subject.SensorMeasurements, request.SensorMeasurementSpecificationDto);
+            var nextAlert = await _alertRepository.AnswerAndGetNextAlertAsync(alertAnswerDto.AlertId, alertAnswerDto.WasAlertAccurate);
 
-            return _mapper.Map<Subject, SubjectWithMeasurementsReplyDto>(subject);
+            return _mapper.Map<Alert, AlertDto>(nextAlert);
         }
 
         private async Task<IEnumerable<SubjectWithoutMeasurementsDto>> GetSubjectsAsync(WatcherHomepageDataRequestDto request)
