@@ -10,6 +10,7 @@ namespace Core.Repositories
 {
     public class SubjectRepository : UserRepository<Subject>, ISubjectRepository
     {
+        private const int _watcherDashboardSubjectsCount = 10;
         public SubjectRepository(NVisionDbContext context) : base(context)
         {
         }
@@ -49,6 +50,17 @@ namespace Core.Repositories
                 .ToListAsync();
 
             return subjects.Count;
+        }
+
+        public async Task<IEnumerable<Subject>> GetWatcherDashboardSubjectsAsync(int watcherId)
+        {
+            var subjects = await Context.Subject
+                //.Include(s => s.SensorMeasurements.OrderByDescending(sm => sm.Timestamp).Take(1))
+                .Where(s => s.WatcherId == watcherId)
+                //.OrderByDescending(s => s.SensorMeasurements.FirstOrDefault().Timestamp)
+                .Take(_watcherDashboardSubjectsCount)
+                .ToListAsync();
+            return subjects;
         }
     }
 }

@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.Services
 {
-    public interface IWatcherDataService
+    public interface IWatcherDashboardService
     {
         Task<WatcherDashboardDataDto> GetWatcherDashboardDataAsync(int watcherId);
     }

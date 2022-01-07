@@ -68,6 +68,7 @@ namespace Infrastructure.Services
                 Password = "Dani_123!",
                 WatcherId = watchers[0].Id,
                 Address = "str. Mihai Eminescu nr. 20, Baia-Mare, Satu-Mare, Romania",
+                Birthday = new DateTime(2000, 7, 9),
                 IsPatient = false
             };
 
@@ -78,6 +79,8 @@ namespace Infrastructure.Services
                 Username = "RobiC",
                 Password = "Robi_123!",
                 WatcherId = watchers[1].Id,
+                Address = "str. George Cosbuc nr. 11, Braila, Braila, Romania",
+                Birthday = new DateTime(1999, 9, 30),
                 IsPatient = true
             };
 
@@ -94,8 +97,8 @@ namespace Infrastructure.Services
                 foreach (SensorType sensorType in Enum.GetValues(typeof(SensorType)))
                 {
                     double lastMeasurement = new Random().NextDouble() * 30;
-                    DateTime crtDate = new DateTime(2021, 11, 01, 12, 0, 0);
-                    DateTime endDate = new DateTime(2021, 12, 30, 23, 59, 59);
+                    DateTime crtDate = new DateTime(2021, 12, 01, 12, 0, 0);
+                    DateTime endDate = new DateTime(2022, 01, 30, 23, 59, 59);
                     TimeSpan sensorMeasurementPeriod = new TimeSpan(1, 0, 0, 0);
 
                     while (crtDate < endDate)

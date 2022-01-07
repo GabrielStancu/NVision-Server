@@ -11,5 +11,7 @@ namespace Core.Repositories
         Task<IEnumerable<Subject>> GetWatcherSubjectsAsync(int watcherId);
         Task<Subject> GetSubjectWithMeasurementsAsync(int subjectId);
         Task<int> GetWatcherSubjectsCount(int watcherId);
+        //////
+        Task<IEnumerable<Subject>> GetWatcherDashboardSubjectsAsync(int watcherId);
     }
 }

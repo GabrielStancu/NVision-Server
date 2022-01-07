@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Core.Models
 {
@@ -10,6 +11,7 @@ namespace Core.Models
         [ForeignKey("Watcher")]
         public int WatcherId { get; set; }
         public Watcher Watcher { get; set; }
+        public DateTime Timestamp { get; set; }
         public string Message { get; set; }
         public bool? WasTrueAlert { get; set; }
     }

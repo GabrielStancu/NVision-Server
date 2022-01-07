@@ -9,6 +9,7 @@ namespace Core.Repositories
 {
     public class AlertRepository : GenericRepository<Alert>, IAlertRepository
     {
+        private const int _watcherDashboardAlertsCount = 5;
         public AlertRepository(NVisionDbContext context) : base(context)
         {
         }
@@ -29,6 +30,17 @@ namespace Core.Repositories
             var nextAlert = await Context.Alert
                 .FirstOrDefaultAsync(a => a.WasTrueAlert == null && a.Id < alertId);
             return nextAlert;
+        }
+        
+        ////
+        public async Task<IEnumerable<Alert>> GetWatcherDashboardAlertsAsync(int watcherId)
+        {
+            var alerts = await Context.Alert
+                .Where(a => a.WatcherId == watcherId)
+                .OrderByDescending(a => a.Timestamp)
+                .Take(_watcherDashboardAlertsCount)
+                .ToListAsync();
+            return alerts;
         }
     }
 }

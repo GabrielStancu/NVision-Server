@@ -8,5 +8,7 @@ namespace Core.Repositories
     {
         Task<IEnumerable<Alert>> GetUnansweredWatcherAlerts(int watcherId);
         Task<Alert> AnswerAndGetNextAlertAsync(int alertId, bool wasAlertAccurate);
+        //
+        Task<IEnumerable<Alert>> GetWatcherDashboardAlertsAsync(int watcherId);
     }
 }

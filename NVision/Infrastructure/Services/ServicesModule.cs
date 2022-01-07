@@ -12,6 +12,7 @@ namespace Infrastructure.Services
             services.AddScoped<IAlertingService, AlertingService>();
             services.AddScoped<ISubjectDataService, SubjectDataService>();
             services.AddScoped<IWatcherDataService, WatcherDataService>();
+            services.AddScoped<IWatcherDashboardService, WatcherDashboardService>();
         }
     }
 }

@@ -39,6 +39,17 @@ namespace Infrastructure.DTOs
                     map => map.MapFrom(
                         src => src.GetType().Name.Replace(_sensorMeasurementPrefix, string.Empty)));
             CreateMap<Alert, AlertDto>();
+            CreateMap<Subject, DashboardSubjectDataDto>()
+                .ForMember(dest => dest.Name,
+                    map => map.MapFrom(
+                        src => src.FullName));
+            CreateMap<Alert, DashboardAlertDataDto>()
+                .ForMember(dest => dest.SubjectName,
+                    map => map.MapFrom(
+                        src => src.Subject.FullName))
+                .ForMember(dest => dest.WasAccurate,
+                    map => map.MapFrom(
+                        src => src.WasTrueAlert));
         }
     }
 }
