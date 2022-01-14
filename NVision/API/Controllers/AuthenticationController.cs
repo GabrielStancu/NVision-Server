@@ -19,6 +19,7 @@ namespace API.Controllers
             _loginService = loginService;
             _registerService = registerService;
         }
+
         [HttpPost("login")]
         public async Task<ActionResult<LoginResultDto>> Login(LoginRequestDto loginRequestDto)
         {
@@ -26,18 +27,11 @@ namespace API.Controllers
             return Ok(loginResultDto);
         }
 
-        [HttpPost("register-watcher")]
-        public async Task<ActionResult<bool>> Register(WatcherRegisterRequestDto watcherRegisterRequestDto)
+        [HttpPost("register")]
+        public async Task<ActionResult<bool>> Register(UserRegisterRequestDto userRegisterRequestDto)
         {
-            bool registeredWatcher = await _registerService.RegisterUserAsync(watcherRegisterRequestDto);
+            bool registeredWatcher = await _registerService.RegisterUserAsync(userRegisterRequestDto);
             return Ok(registeredWatcher);
-        }
-
-        [HttpPost("register-subject")]
-        public async Task<ActionResult<bool>> Register(SubjectRegisterRequestDto subjectRegisterRequestDto)
-        {
-            bool registeredSubject = await _registerService.RegisterUserAsync(subjectRegisterRequestDto);
-            return Ok(registeredSubject);
         }
     }
 }

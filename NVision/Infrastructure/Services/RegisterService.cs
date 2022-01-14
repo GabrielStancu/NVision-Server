@@ -22,24 +22,24 @@ namespace Infrastructure.Services
             _mapper = mapper;
         }
 
-        public async Task<bool> RegisterUserAsync(WatcherRegisterRequestDto watcherRegisterRequestDto)
+        public async Task<bool> RegisterUserAsync(UserRegisterRequestDto userRegisterRequestDto)
         {
-            var watcher = _mapper.Map<WatcherRegisterRequestDto, Watcher>(watcherRegisterRequestDto);
-            return await RegisterUserAsync(watcher);
+            switch (userRegisterRequestDto.UserType)
+            {
+                case UserType.Watcher:
+                    var watcher = _mapper.Map<UserRegisterRequestDto, Watcher>(userRegisterRequestDto);
+                    return await RegisterNewUserAsync(watcher);
+                case UserType.Subject:
+                    var subject = _mapper.Map<UserRegisterRequestDto, Subject>(userRegisterRequestDto);
+                    return await RegisterNewUserAsync(subject);
+                default:
+                    return false;
+            }
         }
 
-        public async Task<bool> RegisterUserAsync(SubjectRegisterRequestDto subjectRegisterRequestDto)
+        private async Task<bool> RegisterNewUserAsync(Watcher watcher)
         {
-            var subject = _mapper.Map<SubjectRegisterRequestDto, Subject>(subjectRegisterRequestDto);
-            return await RegisterUserAsync(subject);
-        }
-
-        private async Task<bool> RegisterUserAsync(Watcher watcher)
-        {
-            var existsWatcher = await _watcherRepository.ExistsUserAsync(watcher.Username);
-            var existsSubject = await _subjectRepository.ExistsUserAsync(watcher.Username);
-
-            if (existsWatcher == false && existsSubject == false)
+            if (!(await AlreadyRegisteredUserAsync(watcher.Username)))
             {
                 await _watcherRepository.InsertAsync(watcher);
                 return true;
@@ -48,12 +48,9 @@ namespace Infrastructure.Services
             return false;
         }
 
-        private async Task<bool> RegisterUserAsync(Subject subject)
+        private async Task<bool> RegisterNewUserAsync(Subject subject)
         {
-            var existsWatcher = await _watcherRepository.ExistsUserAsync(subject.Username);
-            var existsSubject = await _subjectRepository.ExistsUserAsync(subject.Username);
-
-            if (existsWatcher == false && existsSubject == false)
+            if (!(await AlreadyRegisteredUserAsync(subject.Username)))
             {
                 await _subjectRepository.InsertAsync(subject);
                 return true;
@@ -62,5 +59,12 @@ namespace Infrastructure.Services
             return false;
         }
 
+        private async Task<bool> AlreadyRegisteredUserAsync(string username)
+        {
+            var existsWatcher = await _watcherRepository.ExistsUserAsync(username);
+            var existsSubject = await _subjectRepository.ExistsUserAsync(username);
+
+            return existsWatcher || existsSubject;
+        }
     }
 }

@@ -10,8 +10,8 @@ namespace Infrastructure.DTOs
         {
             CreateMap<Watcher, LoginResultDto>();
             CreateMap<Subject, LoginResultDto>();
-            CreateMap<WatcherRegisterRequestDto, Watcher>();
-            CreateMap<SubjectRegisterRequestDto, Subject>();
+            CreateMap<UserRegisterRequestDto, Watcher>();
+            CreateMap<UserRegisterRequestDto, Subject>();
             CreateMap<Subject, SubjectWithoutMeasurementsDto>();
             CreateMap<Subject, SubjectWithMeasurementsReplyDto>();
             CreateMap<AirflowSensorMeasurement, SensorMeasurementDto>()

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Core.Models;
+using System;
 
 namespace Infrastructure.DTOs
 {
@@ -10,5 +11,6 @@ namespace Infrastructure.DTOs
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public DateTime Birthday { get; set; }
+        public UserType UserType { get; set; }
     }
 }

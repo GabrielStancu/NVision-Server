@@ -5,7 +5,6 @@ namespace Infrastructure.Services
 {
     public interface IRegisterService
     {
-        Task<bool> RegisterUserAsync(WatcherRegisterRequestDto watcherRegisterRequestDto);
-        Task<bool> RegisterUserAsync(SubjectRegisterRequestDto subjectRegisterRequestDto);
+        Task<bool> RegisterUserAsync(UserRegisterRequestDto userRegisterRequestDto);
     }
 }
