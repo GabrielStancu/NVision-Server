@@ -7,21 +7,29 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.Services
 {
+    public interface IWatcherDashboardService
+    {
+        Task<WatcherDashboardDataDto> GetWatcherDashboardDataAsync(int watcherId);
+    }
     public class WatcherDashboardService : IWatcherDashboardService
     {
         private readonly ISubjectRepository _subjectRepository;
         private readonly IAlertRepository _alertRepository;
+        private readonly ISensorMeasurementRepository _sensorMeasurementRepository;
         private readonly IMapper _mapper;
 
         public WatcherDashboardService(
             ISubjectRepository subjectRepository, 
             IAlertRepository alertRepository,
+            ISensorMeasurementRepository sensorMeasurementRepository,
             IMapper mapper)
         {
             _subjectRepository = subjectRepository;
             _alertRepository = alertRepository;
+            _sensorMeasurementRepository = sensorMeasurementRepository;
             _mapper = mapper;
         }
+
         public async Task<WatcherDashboardDataDto> GetWatcherDashboardDataAsync(int watcherId)
         {
             var cards = await GetDashboardCardsAsync(watcherId);
@@ -38,27 +46,26 @@ namespace Infrastructure.Services
 
         private async Task<IEnumerable<DashboardCardDataDto>> GetDashboardCardsAsync(int watcherId)
         {
-            await Task.Delay(10);
             return new List<DashboardCardDataDto>
             {
                 new DashboardCardDataDto
                 {
-                    NumericValue = 2,
+                    NumericValue = await GetWatchedSubjectsCountAsync(watcherId),
                     PropertyName = "Watched Subjects"
                 },
                 new DashboardCardDataDto
                 {
-                    NumericValue = 230,
+                    NumericValue = await GetWatcherMeasurementsAsync(watcherId),
                     PropertyName = "Measurements This Week"
                 },
                 new DashboardCardDataDto
                 {
-                    NumericValue = 5,
+                    NumericValue = await GetWatcherAlertsCountAsync(watcherId),
                     PropertyName = "Alerts This Week"
                 },
                 new DashboardCardDataDto
                 {
-                    NumericValue = 1,
+                    NumericValue = await GetWatcherMeasuredSubjectsCountAsync(watcherId),
                     PropertyName = "Subjects Measured Today"
                 }
             };
@@ -90,6 +97,31 @@ namespace Infrastructure.Services
             }
 
             return dashboardAlerts;
+        }
+
+        private async Task<int> GetWatchedSubjectsCountAsync(int watcherId)
+        {
+            int count = await _subjectRepository.GetWatcherSubjectsCountAsync(watcherId);
+            return count;
+        }
+
+        private async Task<int> GetWatcherMeasurementsAsync(int watcherId)
+        {
+            int count = await _sensorMeasurementRepository.GetWatcherMeasurementsCountLastDaysAsync(watcherId);
+            return count;
+        }
+
+        private async Task<int> GetWatcherAlertsCountAsync(int watcherId)
+        {
+            int count = await _alertRepository.GetWatcherAlertsCountAsync(watcherId);
+            return count;
+        }
+
+        private async Task<int> GetWatcherMeasuredSubjectsCountAsync(int watcherId)
+        {
+            var subjects = await _subjectRepository.GetWatcherSubjectsAsync(watcherId);
+            var count = await _sensorMeasurementRepository.GetMeasuredSubjectsCountAsync(subjects);
+            return count;
         }
     }
 }

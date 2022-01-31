@@ -9,9 +9,9 @@ namespace API.Controllers
     [ApiController]
     public class WatcherController : ControllerBase
     {
-        private readonly IWatcherDataService _watcherDataService;
+        private readonly IWatcherService _watcherDataService;
 
-        public WatcherController(IWatcherDataService watcherDataService)
+        public WatcherController(IWatcherService watcherDataService)
         {
             _watcherDataService = watcherDataService;
         }

@@ -7,6 +7,12 @@ using System.Threading.Tasks;
 
 namespace Core.Repositories
 {
+    public interface IAlertRepository : IGenericRepository<Alert>
+    {
+        Task<IEnumerable<Alert>> GetWatcherDashboardAlertsAsync(int watcherId);
+        Task<int> GetWatcherAlertsCountAsync(int watcherId, int days = 7);
+    }
+
     public class AlertRepository : GenericRepository<Alert>, IAlertRepository
     {
         private const int _watcherDashboardAlertsCount = 5;
@@ -14,33 +20,25 @@ namespace Core.Repositories
         {
         }
 
-        public async Task<IEnumerable<Alert>> GetUnansweredWatcherAlerts(int watcherId)
-        {
-            return await Context.Alert
-                .Where(a => a.WatcherId == watcherId && a.WasTrueAlert == null)
-                .ToListAsync();
-        }
-
-        public async Task<Alert> AnswerAndGetNextAlertAsync(int alertId, bool wasAlertAccurate)
-        {
-            var alert = await SelectByIdAsync(alertId);
-            alert.WasTrueAlert = wasAlertAccurate;
-            await UpdateAsync(alert);
-
-            var nextAlert = await Context.Alert
-                .FirstOrDefaultAsync(a => a.WasTrueAlert == null && a.Id < alertId);
-            return nextAlert;
-        }
-        
-        ////
         public async Task<IEnumerable<Alert>> GetWatcherDashboardAlertsAsync(int watcherId)
         {
             var alerts = await Context.Alert
-                .Where(a => a.WatcherId == watcherId)
+                .Include(a => a.Subject)
+                .Where(a => a.Subject.WatcherId == watcherId)
                 .OrderByDescending(a => a.Timestamp)
                 .Take(_watcherDashboardAlertsCount)
                 .ToListAsync();
             return alerts;
+        }
+
+        public async Task<int> GetWatcherAlertsCountAsync(int watcherId, int days = 7)
+        {
+            var alerts = await Context.Alert
+                .Include(a => a.Subject)
+                .Where(a => a.Subject.WatcherId == watcherId)
+                .ToListAsync();
+
+            return alerts.Count;
         }
     }
 }

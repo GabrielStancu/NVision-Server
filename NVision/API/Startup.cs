@@ -2,9 +2,7 @@ using API.Hubs;
 using API.Security;
 using Core.Contexts;
 using Core.Repositories;
-using Infrastructure.Convertors;
 using Infrastructure.DTOs;
-using Infrastructure.Filtering;
 using Infrastructure.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -56,17 +54,11 @@ namespace API
             // App Services 
             services.AddServices();
 
-            // Convertors
-            services.AddConvertors();
-
             // JWT
             services.AddJwt(
                 ConfigurationManager.GetIssuer(),
                 ConfigurationManager.GetAudience(),
                 ConfigurationManager.GetKey());
-
-            // Filtering
-            services.AddFiltering();
 
 
             // Controllers

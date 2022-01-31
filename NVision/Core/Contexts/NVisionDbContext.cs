@@ -15,12 +15,13 @@ namespace Core.Contexts
 
         public DbSet<Subject> Subject { get; set; }
         public DbSet<Watcher> Watcher { get; set; }
-        public DbSet<AirflowSensorMeasurement> AirflowSensorMeasurement { get; set; }
-        public DbSet<BloodPressureSensorMeasurement> BloodPressureSensorMeasurement { get; set; }
-        public DbSet<EcgSensorMeasurement> EcgSensorMeasurement { get; set; }
-        public DbSet<GsrSensorMeasurement> GsrSensorMeasurement { get; set; }
-        public DbSet<PulseOxygenHeartRateSensorMeasurement> PulseOxygenHeartRateSensorMeasurement { get; set; }
-        public DbSet<TemperatureSensorMeasurement> TemperatureSensorMeasurement { get; set; }
+        //public DbSet<AirflowSensorMeasurement> AirflowSensorMeasurement { get; set; }
+        //public DbSet<BloodPressureSensorMeasurement> BloodPressureSensorMeasurement { get; set; }
+        //public DbSet<EcgSensorMeasurement> EcgSensorMeasurement { get; set; }
+        //public DbSet<GsrSensorMeasurement> GsrSensorMeasurement { get; set; }
+        //public DbSet<PulseOxygenHeartRateSensorMeasurement> PulseOxygenHeartRateSensorMeasurement { get; set; }
+        //public DbSet<TemperatureSensorMeasurement> TemperatureSensorMeasurement { get; set; }
+        public DbSet<SensorMeasurement> SensorMeasurement { get; set; }
         public DbSet<Alert> Alert { get; set; }
     }
 }

@@ -14,27 +14,7 @@ namespace Infrastructure.DTOs
             CreateMap<UserRegisterRequestDto, Subject>();
             CreateMap<Subject, SubjectWithoutMeasurementsDto>();
             CreateMap<Subject, SubjectWithMeasurementsReplyDto>();
-            CreateMap<AirflowSensorMeasurement, SensorMeasurementDto>()
-                .ForMember(dest => dest.SensorName, 
-                    map => map.MapFrom(
-                        src => src.GetType().Name.Replace(_sensorMeasurementPrefix, string.Empty)));
-            CreateMap<BloodPressureSensorMeasurement, SensorMeasurementDto>()
-                .ForMember(dest => dest.SensorName,
-                    map => map.MapFrom(
-                        src => src.GetType().Name.Replace(_sensorMeasurementPrefix, string.Empty)));
-            CreateMap<EcgSensorMeasurement, SensorMeasurementDto>()
-                .ForMember(dest => dest.SensorName,
-                    map => map.MapFrom(
-                        src => src.GetType().Name.Replace(_sensorMeasurementPrefix, string.Empty)));
-            CreateMap<GsrSensorMeasurement, SensorMeasurementDto>()
-                .ForMember(dest => dest.SensorName,
-                    map => map.MapFrom(
-                        src => src.GetType().Name.Replace(_sensorMeasurementPrefix, string.Empty)));
-            CreateMap<PulseOxygenHeartRateSensorMeasurement, SensorMeasurementDto>()
-                .ForMember(dest => dest.SensorName,
-                    map => map.MapFrom(
-                        src => src.GetType().Name.Replace(_sensorMeasurementPrefix, string.Empty)));
-            CreateMap<TemperatureSensorMeasurement, SensorMeasurementDto>()
+            CreateMap<SensorMeasurement, SensorMeasurementDto>()
                 .ForMember(dest => dest.SensorName,
                     map => map.MapFrom(
                         src => src.GetType().Name.Replace(_sensorMeasurementPrefix, string.Empty)));

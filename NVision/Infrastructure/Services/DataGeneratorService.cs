@@ -1,41 +1,46 @@
 ﻿using Core.Models;
 using Core.Repositories;
-using Infrastructure.Convertors;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace Infrastructure.Services
 {
+    public interface IDataGeneratorService
+    {
+        Task GenerateDataAsync();
+    }
+
     public class DataGeneratorService : IDataGeneratorService
     {
         private readonly IWatcherRepository _watcherRepository;
         private readonly ISubjectRepository _subjectRepository;
         private readonly ISensorMeasurementRepository _sensorMeasurementRepository;
-        private readonly ISensorTypeToSensorMeasurementConvertor _convertor;
+        private readonly IAlertRepository _alertRepository;
 
         public DataGeneratorService(
             IWatcherRepository watcherRepository,
             ISubjectRepository subjectRepository,
             ISensorMeasurementRepository sensorMeasurementRepository,
-            ISensorTypeToSensorMeasurementConvertor convertor)
+            IAlertRepository alertRepository)
         {
             _watcherRepository = watcherRepository;
             _subjectRepository = subjectRepository;
             _sensorMeasurementRepository = sensorMeasurementRepository;
-            _convertor = convertor;
+            _alertRepository = alertRepository;
         }
-        public async Task GenerateData()
+        public async Task GenerateDataAsync()
         {
             if (!(await _sensorMeasurementRepository.SelectAllAsync()).Any())
             {
-                await GenerateWatchers();
-                await GenerateSubjects();
-                await GenerateSensorMeasurements();
+                await GenerateWatchersAsync();
+                await GenerateSubjectsAsync();
+                await GenerateSensorMeasurementsAsync();
+                await GenerateAlertsAsync();
             }
         }
 
-        private async Task GenerateWatchers()
+        private async Task GenerateWatchersAsync()
         {
             var watcher1 = new Watcher
             {
@@ -57,7 +62,7 @@ namespace Infrastructure.Services
             await _watcherRepository.InsertAsync(watcher2);
         }
 
-        private async Task GenerateSubjects()
+        private async Task GenerateSubjectsAsync()
         {
             var watchers = (await _watcherRepository.SelectAllAsync()).ToList();
             var subject1 = new Subject
@@ -88,32 +93,54 @@ namespace Infrastructure.Services
             await _subjectRepository.InsertAsync(subject2);
         }
 
-        private async Task GenerateSensorMeasurements()
+        private async Task GenerateSensorMeasurementsAsync()
         {
             var subjects = (await _subjectRepository.SelectAllAsync()).ToList();
+            var crtDate = DateTime.Now;
 
             foreach (var subject in subjects)
             {
                 foreach (SensorType sensorType in Enum.GetValues(typeof(SensorType)))
                 {
                     double lastMeasurement = new Random().NextDouble() * 30;
-                    DateTime crtDate = new DateTime(2021, 12, 01, 12, 0, 0);
-                    DateTime endDate = new DateTime(2022, 01, 30, 23, 59, 59);
+                    DateTime startDate = new DateTime(crtDate.Year, crtDate.Month, crtDate.AddDays(-20).Day, 12, 0, 0);
+                    DateTime endDate = new DateTime(crtDate.Year, crtDate.Month, crtDate.Day, crtDate.Hour, 0, 0);
                     TimeSpan sensorMeasurementPeriod = new TimeSpan(1, 0, 0, 0);
 
-                    while (crtDate < endDate)
+                    while (startDate < endDate)
                     {
-                        Console.WriteLine($"Generating data for subject {subject.FirstName} {subject.LastName} for sensor {sensorType.ToString()} at {crtDate}");
+                        Console.WriteLine($"Generating data for subject {subject.FirstName} {subject.LastName} for sensor {sensorType} at {startDate}");
                         int sign = new Random().NextDouble() >= 0.5 ? 1 : -1;
-                        var sensorMeasurement = _convertor.Convert(sensorType);
+                        var sensorMeasurement = new SensorMeasurement(sensorType);
 
                         sensorMeasurement.SubjectId = subject.Id;
-                        sensorMeasurement.Timestamp = crtDate;
+                        sensorMeasurement.Timestamp = startDate;
                         sensorMeasurement.Value = lastMeasurement + sign * new Random().NextDouble() / 2;
 
                         await _sensorMeasurementRepository.InsertAsync(sensorMeasurement);
-                        crtDate += sensorMeasurementPeriod;
+                        startDate += sensorMeasurementPeriod;
                     }
+                }
+            }
+        }
+
+        private async Task GenerateAlertsAsync()
+        {
+            var subjects = await _subjectRepository.SelectAllAsync();
+
+            foreach (var subject in subjects)
+            {
+                int alertsNumber = (int)(new Random().NextDouble() * 4) + 1;
+                for (int alertIndex = 0; alertIndex < alertsNumber; alertIndex++)
+                {
+                    var alert = new Alert
+                    {
+                        Message = $"Test alert #{alertIndex + 1} for subject {subject.FullName}",
+                        SubjectId = subject.Id,
+                        WasTrueAlert = new Random().NextDouble() >= 0.5 ? true : false,
+                        Timestamp = DateTime.Now.AddDays(-1 * alertIndex + 2)
+                    };
+                    await _alertRepository.InsertAsync(alert);
                 }
             }
         }

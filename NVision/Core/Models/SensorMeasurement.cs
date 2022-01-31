@@ -11,6 +11,13 @@ namespace Core.Models
         public Subject Subject { get; set; }
         public double Value { get; set; }
         public DateTime Timestamp { get; set; }
-        public virtual SensorType SensorType { get; }
+        public SensorType SensorType { get; }
+        public SensorMeasurement(SensorType sensorType)
+        {
+            SensorType = sensorType;
+        }
+        public SensorMeasurement()
+        {
+        }
     }
 }

@@ -13,7 +13,7 @@ namespace API
             using var scope = host.Services.CreateScope();
             var services = scope.ServiceProvider;
             var dataGeneratorService = services.GetRequiredService<IDataGeneratorService>();
-            dataGeneratorService.GenerateData().GetAwaiter().GetResult();
+            dataGeneratorService.GenerateDataAsync().GetAwaiter().GetResult();
             host.Run();
         }
 

@@ -6,6 +6,11 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.Services
 {
+    public interface IAlertingService
+    {
+        Task<HealthAlert> CreateAlertAsync(AlertDto alertDto);
+    }
+
     public class AlertingService : IAlertingService
     {
         private readonly IWatcherRepository _watcherRepository;
@@ -29,7 +34,6 @@ namespace Infrastructure.Services
             var alert = new Alert
             {
                 SubjectId = subject.Id,
-                WatcherId = subject.WatcherId,
                 Message = message,
                 WasTrueAlert = null
             };           

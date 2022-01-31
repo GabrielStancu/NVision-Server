@@ -6,6 +6,11 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.Services
 {
+    public interface IRegisterService
+    {
+        Task<bool> RegisterUserAsync(UserRegisterRequestDto userRegisterRequestDto);
+    }
+
     public class RegisterService : IRegisterService
     {
         private readonly IWatcherRepository _watcherRepository;
