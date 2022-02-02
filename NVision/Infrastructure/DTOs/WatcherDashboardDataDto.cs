@@ -28,6 +28,6 @@ namespace Infrastructure.DTOs
         public string SubjectName { get; set; }
         public string Message { get; set; }
         public DateTime Timestamp { get; set; }
-        public bool WasAccurate { get; set; }
+        public bool? WasTrueAlert { get; set; }
     }
 }

@@ -30,7 +30,7 @@ namespace Infrastructure.Services
         public async Task<HealthAlert> CreateAlertAsync(AlertDto alertDto)
         {
             var subject = await _subjectRepository.SelectByIdAsync(alertDto.SubjectId);
-            var message = $"An alert was detected for {subject.FirstName} {subject.LastName} in {alertDto.AlertMoment.ToShortDateString()} at {alertDto.AlertMoment.ToLongTimeString()}. The remote monitoring hub detected the following issue: <{alertDto.Message}>.";
+            var message = $"An alert was detected for {subject.FirstName} {subject.LastName} in {alertDto.Timestamp.ToShortDateString()} at {alertDto.Timestamp.ToLongTimeString()}. The remote monitoring hub detected the following issue: <{alertDto.Message}>.";
             var alert = new Alert
             {
                 SubjectId = subject.Id,

@@ -9,6 +9,7 @@ namespace Core.Repositories
 {
     public interface IAlertRepository : IGenericRepository<Alert>
     {
+        Task<IEnumerable<Alert>> GetWatcherAlertsAsync(int watcherId);
         Task<IEnumerable<Alert>> GetWatcherDashboardAlertsAsync(int watcherId);
         Task<int> GetWatcherAlertsCountAsync(int watcherId, int days = 7);
     }
@@ -18,6 +19,15 @@ namespace Core.Repositories
         private const int _watcherDashboardAlertsCount = 5;
         public AlertRepository(NVisionDbContext context) : base(context)
         {
+        }
+
+        public async Task<IEnumerable<Alert>> GetWatcherAlertsAsync(int watcherId)
+        {
+            var alerts = await Context.Alert
+                .Include(a => a.Subject)
+                .Where(a => a.Subject.WatcherId == watcherId)
+                .ToListAsync();
+            return alerts;
         }
 
         public async Task<IEnumerable<Alert>> GetWatcherDashboardAlertsAsync(int watcherId)
