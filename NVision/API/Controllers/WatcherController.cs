@@ -30,5 +30,12 @@ namespace API.Controllers
             var alerts = await _watcherService.GetWatcherAlertsAsync(watcherId);
             return Ok(alerts);
         }
+
+        [HttpPost("answer-alert")]
+        public async Task<ActionResult<bool>> AnswerAlert(AlertAnswerDto alertAnswerDto)
+        {
+            bool answeredAlert = await _watcherService.AnswerAlertAsync(alertAnswerDto);
+            return Ok(answeredAlert);
+        }
     }
 }

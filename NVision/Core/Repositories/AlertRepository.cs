@@ -12,6 +12,7 @@ namespace Core.Repositories
         Task<IEnumerable<Alert>> GetWatcherAlertsAsync(int watcherId);
         Task<IEnumerable<Alert>> GetWatcherDashboardAlertsAsync(int watcherId);
         Task<int> GetWatcherAlertsCountAsync(int watcherId, int days = 7);
+        Task<bool> AnswerAlertAsync(int alertId, bool wasTrueAlert);
     }
 
     public class AlertRepository : GenericRepository<Alert>, IAlertRepository
@@ -49,6 +50,16 @@ namespace Core.Repositories
                 .ToListAsync();
 
             return alerts.Count;
+        }
+
+        public async Task<bool> AnswerAlertAsync(int alertId, bool wasTrueAlert)
+        {
+            var alert = await Context.Alert
+                .FirstOrDefaultAsync(a => a.Id == alertId);
+            alert.WasTrueAlert = wasTrueAlert;
+            await UpdateAsync(alert);
+
+            return true;
         }
     }
 }

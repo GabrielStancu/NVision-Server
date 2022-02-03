@@ -11,6 +11,7 @@ namespace Infrastructure.Services
     {
         Task<WatcherDashboardDataDto> GetWatcherDashboardDataAsync(int watcherId);
         Task<IEnumerable<AlertDto>> GetWatcherAlertsAsync(int watcherId);
+        Task<bool> AnswerAlertAsync(AlertAnswerDto alertAnswerDto);
     }
 
     public class WatcherService : IWatcherService
@@ -40,6 +41,12 @@ namespace Infrastructure.Services
                 alertDtos.Add(_mapper.Map<Alert, AlertDto>(alert));
             }
             return alertDtos;
+        }
+
+        public async Task<bool> AnswerAlertAsync(AlertAnswerDto alertAnswerDto)
+        {
+            bool answeredAlert = await _alertRepository.AnswerAlertAsync(alertAnswerDto.AlertId, alertAnswerDto.WasTrueAlert);
+            return answeredAlert;
         }
     }
 }

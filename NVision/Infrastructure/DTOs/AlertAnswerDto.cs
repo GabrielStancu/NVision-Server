@@ -3,6 +3,6 @@
     public class AlertAnswerDto
     {
         public int AlertId { get; set; }
-        public bool WasAlertAccurate { get; set; }
+        public bool WasTrueAlert { get; set; }
     }
 }

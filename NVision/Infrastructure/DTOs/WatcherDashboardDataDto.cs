@@ -24,6 +24,7 @@ namespace Infrastructure.DTOs
 
     public class DashboardAlertDataDto
     {
+        public int Id { get; set; }
         public int SubjectId { get; set; }
         public string SubjectName { get; set; }
         public string Message { get; set; }
