@@ -8,6 +8,7 @@ namespace Infrastructure.DTOs
         public string Username { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
+        public string FullName { get; set; }
         public DateTime Birthday { get; set; }
         public int WatcherId { get; set; }
         public string Address { get; set; }

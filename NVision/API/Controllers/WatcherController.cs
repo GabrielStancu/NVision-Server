@@ -37,5 +37,12 @@ namespace API.Controllers
             bool answeredAlert = await _watcherService.AnswerAlertAsync(alertAnswerDto);
             return Ok(answeredAlert);
         }
+
+        [HttpGet("subjects/{watcherId}")]
+        public async Task<ActionResult<IEnumerable<SubjectWithoutMeasurementsDto>>> GetWatcherSubjects(int watcherId)
+        {
+            var subjects = await _watcherService.GetWatcherSubjectsAsync(watcherId);
+            return Ok(subjects);
+        }
     }
 }

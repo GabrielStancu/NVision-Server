@@ -12,18 +12,25 @@ namespace Infrastructure.Services
         Task<WatcherDashboardDataDto> GetWatcherDashboardDataAsync(int watcherId);
         Task<IEnumerable<AlertDto>> GetWatcherAlertsAsync(int watcherId);
         Task<bool> AnswerAlertAsync(AlertAnswerDto alertAnswerDto);
+        Task<IEnumerable<SubjectWithoutMeasurementsDto>> GetWatcherSubjectsAsync(int watcherId);
     }
 
     public class WatcherService : IWatcherService
     {
         private readonly IWatcherDashboardService _watcherDashboardService;
         private readonly IAlertRepository _alertRepository;
+        private readonly ISubjectRepository _subjectRepository;
         private readonly IMapper _mapper;
 
-        public WatcherService(IWatcherDashboardService watcherDashboardService, IAlertRepository alertRepository, IMapper mapper)
+        public WatcherService(
+            IWatcherDashboardService watcherDashboardService, 
+            IAlertRepository alertRepository, 
+            ISubjectRepository subjectRepository,
+            IMapper mapper)
         {
             _watcherDashboardService = watcherDashboardService;
             _alertRepository = alertRepository;
+            _subjectRepository = subjectRepository;
             _mapper = mapper;
         }
         public async Task<WatcherDashboardDataDto> GetWatcherDashboardDataAsync(int watcherId)
@@ -47,6 +54,18 @@ namespace Infrastructure.Services
         {
             bool answeredAlert = await _alertRepository.AnswerAlertAsync(alertAnswerDto.AlertId, alertAnswerDto.WasTrueAlert);
             return answeredAlert;
+        }
+
+        public async Task<IEnumerable<SubjectWithoutMeasurementsDto>> GetWatcherSubjectsAsync(int watcherId)
+        {
+            var subjects = await _subjectRepository.GetWatcherSubjectsAsync(watcherId);
+            var subjectDtos = new List<SubjectWithoutMeasurementsDto>();
+
+            foreach (var subject in subjects)
+            {
+                subjectDtos.Add(_mapper.Map<Subject, SubjectWithoutMeasurementsDto>(subject));
+            }
+            return subjectDtos;
         }
     }
 }
