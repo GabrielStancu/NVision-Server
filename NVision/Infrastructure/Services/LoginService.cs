@@ -2,6 +2,7 @@
 using Core.Models;
 using Core.Repositories;
 using Infrastructure.DTOs;
+using Infrastructure.Helpers;
 using System.Threading.Tasks;
 
 namespace Infrastructure.Services
@@ -15,15 +16,18 @@ namespace Infrastructure.Services
     {
         private readonly IWatcherRepository _watcherRepository;
         private readonly ISubjectRepository _subjectRepository;
+        private readonly IProfilePictureUrlResolver _profilePictureUrlResolver;
         private readonly IMapper _mapper;
 
         public LoginService(
             IWatcherRepository watcherRepository,
             ISubjectRepository subjectRepository,
+            IProfilePictureUrlResolver profilePictureUrlResolver,
             IMapper mapper)
         {
             _watcherRepository = watcherRepository;
             _subjectRepository = subjectRepository;
+            _profilePictureUrlResolver = profilePictureUrlResolver;
             _mapper = mapper;
         }
         public async Task<LoginResultDto> LoginAsync(LoginRequestDto loginRequestDto)
@@ -42,14 +46,22 @@ namespace Infrastructure.Services
         {
             var watcher = await _watcherRepository.LoginAsync(loginRequestDto.Username, loginRequestDto.Password);
 
-            return watcher is null ? null : _mapper.Map<Watcher, LoginResultDto>(watcher);
+            if (watcher is null)
+                return null;
+
+            watcher.ProfilePictureSrc = _profilePictureUrlResolver.Resolve(watcher);
+            return _mapper.Map<Watcher, LoginResultDto>(watcher);
         }
 
         private async Task<LoginResultDto> TryLoginSubjectAsync(LoginRequestDto loginRequestDto)
         {
             var subject = await _subjectRepository.LoginAsync(loginRequestDto.Username, loginRequestDto.Password);
 
-            return subject is null ? null : _mapper.Map<Subject, LoginResultDto>(subject);
+            if (subject is null)
+                return null;
+
+            subject.ProfilePictureSrc = _profilePictureUrlResolver.Resolve(subject);
+            return _mapper.Map<Subject, LoginResultDto>(subject);
         }
     }
 }

@@ -2,6 +2,7 @@
 using Core.Models;
 using Core.Repositories;
 using Infrastructure.DTOs;
+using Infrastructure.Helpers;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -16,17 +17,20 @@ namespace Infrastructure.Services
         private readonly ISubjectRepository _subjectRepository;
         private readonly IAlertRepository _alertRepository;
         private readonly ISensorMeasurementRepository _sensorMeasurementRepository;
+        private readonly IProfilePictureUrlResolver _profilePictureUrlResolver;
         private readonly IMapper _mapper;
 
         public WatcherDashboardService(
             ISubjectRepository subjectRepository, 
             IAlertRepository alertRepository,
             ISensorMeasurementRepository sensorMeasurementRepository,
+            IProfilePictureUrlResolver profilePictureUrlResolver,
             IMapper mapper)
         {
             _subjectRepository = subjectRepository;
             _alertRepository = alertRepository;
             _sensorMeasurementRepository = sensorMeasurementRepository;
+            _profilePictureUrlResolver = profilePictureUrlResolver;
             _mapper = mapper;
         }
 
@@ -78,6 +82,7 @@ namespace Infrastructure.Services
 
             foreach (var subject in subjects)
             {
+                subject.ProfilePictureSrc = _profilePictureUrlResolver.Resolve(subject);
                 var dashboardSubject = _mapper.Map<Subject, DashboardSubjectDataDto>(subject);
                 dashboardSubjects.Add(dashboardSubject);
             }

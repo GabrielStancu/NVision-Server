@@ -22,14 +22,14 @@ namespace API.Security
             new Claim(ClaimTypes.Name, username),
             new Claim(ClaimTypes.Role, userType.ToString())
         };
-            var tokeOptions = new JwtSecurityToken(
+            var tokenOptions = new JwtSecurityToken(
                 issuer: issuer,
                 audience: audience,
                 claims: claims,
-                expires: DateTime.Now.AddHours(1),
+                expires: DateTime.Now.AddHours(6),
                 signingCredentials: signinCredentials
             );
-            string tokenString = new JwtSecurityTokenHandler().WriteToken(tokeOptions);
+            string tokenString = new JwtSecurityTokenHandler().WriteToken(tokenOptions);
 
             return tokenString;
         }

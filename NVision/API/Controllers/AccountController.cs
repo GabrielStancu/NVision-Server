@@ -1,4 +1,5 @@
-﻿using Infrastructure.DTOs;
+﻿using API.Security;
+using Infrastructure.DTOs;
 using Infrastructure.Services;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -31,7 +32,14 @@ namespace API.Controllers
         public async Task<ActionResult<LoginResultDto>> Login(LoginRequestDto loginRequestDto)
         {
             var loginResultDto = await _loginService.LoginAsync(loginRequestDto);
-            return Ok(loginResultDto);
+
+            if (loginResultDto != null)
+            {
+                loginResultDto.Token = TokenGenerator.GenerateToken(loginResultDto.Username, loginResultDto.UserType);
+                return Ok(loginResultDto);
+            }
+
+            return Unauthorized();
         }
 
         [HttpPost("register")]
