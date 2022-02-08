@@ -7,6 +7,7 @@ namespace Infrastructure.DTOs
         public int Id { get; set; }
         public string Username { get; set; }
         public UserType UserType { get; set; }
+        public string ProfilePictureSrc { get; set; }
         public string Token { get; set;  }
     }
 }

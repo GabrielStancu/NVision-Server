@@ -3,14 +3,17 @@ using API.Security;
 using Core.Contexts;
 using Core.Repositories;
 using Infrastructure.DTOs;
+using Infrastructure.Helpers;
 using Infrastructure.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using System.IO;
 
 namespace API
 {
@@ -53,6 +56,9 @@ namespace API
 
             // App Services 
             services.AddServices();
+
+            // App Helpers
+            services.AddHelpers();
 
             // JWT
             services.AddJwt(
@@ -102,6 +108,12 @@ namespace API
                 c.RoutePrefix = string.Empty;
             });
 
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                FileProvider = new PhysicalFileProvider(
+                    Path.Combine(Directory.GetCurrentDirectory(), "ProfilePictures")),
+                RequestPath = "/ProfilePictures"
+            });
         }
     }
 }

@@ -10,6 +10,7 @@ namespace Infrastructure.DTOs
         public string LastName { get; set; }
         public string FullName { get; set; }
         public DateTime Birthday { get; set; }
+        public string ProfilePictureSrc { get; set; }
         public int WatcherId { get; set; }
         public string Address { get; set; }
         public bool IsPatient { get; set; }
