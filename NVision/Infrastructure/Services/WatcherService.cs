@@ -14,12 +14,15 @@ namespace Infrastructure.Services
         Task<IEnumerable<AlertDto>> GetWatcherAlertsAsync(int watcherId);
         Task<bool> AnswerAlertAsync(AlertAnswerDto alertAnswerDto);
         Task<IEnumerable<SubjectWithoutMeasurementsDto>> GetWatcherSubjectsAsync(int watcherId);
+        Task<WatcherProfileDataDto> GetProfileDataAsync(int watcherId);
+        Task<bool> SaveChangesAsync(WatcherProfileDataDto watcherProfile);
     }
 
     public class WatcherService : IWatcherService
     {
         private readonly IWatcherDashboardService _watcherDashboardService;
         private readonly IAlertRepository _alertRepository;
+        private readonly IWatcherRepository _watcherRepository;
         private readonly ISubjectRepository _subjectRepository;
         private readonly IProfilePictureUrlResolver _profilePictureUrlResolver;
         private readonly IMapper _mapper;
@@ -27,12 +30,14 @@ namespace Infrastructure.Services
         public WatcherService(
             IWatcherDashboardService watcherDashboardService, 
             IAlertRepository alertRepository, 
+            IWatcherRepository watcherRepository,
             ISubjectRepository subjectRepository,
             IProfilePictureUrlResolver profilePictureUrlResolver,
             IMapper mapper)
         {
             _watcherDashboardService = watcherDashboardService;
             _alertRepository = alertRepository;
+            _watcherRepository = watcherRepository;
             _subjectRepository = subjectRepository;
             _profilePictureUrlResolver = profilePictureUrlResolver;
             _mapper = mapper;
@@ -71,6 +76,26 @@ namespace Infrastructure.Services
                 subjectDtos.Add(_mapper.Map<Subject, SubjectWithoutMeasurementsDto>(subject));
             }
             return subjectDtos;
+        }
+
+        public async Task<WatcherProfileDataDto> GetProfileDataAsync(int watcherId)
+        {
+            var watcher = await _watcherRepository.SelectByIdAsync(watcherId);
+            watcher.ProfilePictureSrc = _profilePictureUrlResolver.Resolve(watcher);
+            return _mapper.Map<Watcher, WatcherProfileDataDto>(watcher);
+        }
+
+        public async Task<bool> SaveChangesAsync(WatcherProfileDataDto watcherProfile)
+        {
+            if (await _watcherRepository.ExistsUserAsync(watcherProfile.Id, watcherProfile.Username) ||
+                await _subjectRepository.ExistsUserAsync(watcherProfile.Id, watcherProfile.Username))
+                return false;
+            if (!watcherProfile.Password.Equals(watcherProfile.RepeatedPassword))
+                return false;
+
+            var watcher = _mapper.Map<WatcherProfileDataDto, Watcher>(watcherProfile);
+            await _watcherRepository.UpdateAsync(watcher);
+            return true;
         }
     }
 }

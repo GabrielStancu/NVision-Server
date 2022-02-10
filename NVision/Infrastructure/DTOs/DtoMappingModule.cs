@@ -30,6 +30,11 @@ namespace Infrastructure.DTOs
                 .ForMember(dest => dest.SubjectName,
                     map => map.MapFrom(
                         src => src.Subject.FullName));
+            CreateMap<Watcher, WatcherProfileDataDto>()
+                .ForMember(dest => dest.RepeatedPassword,
+                    map => map.MapFrom(
+                        src => src.Password))
+                .ReverseMap();
         }
     }
 }

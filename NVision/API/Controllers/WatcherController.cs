@@ -46,5 +46,19 @@ namespace API.Controllers
             var subjects = await _watcherService.GetWatcherSubjectsAsync(watcherId);
             return Ok(subjects);
         }
+
+        [HttpGet("profile-data/{watcherId}")]
+        public async Task<ActionResult<WatcherProfileDataDto>> GetProfilePicture(int watcherId)
+        {
+            var watcherProfileData = await _watcherService.GetProfileDataAsync(watcherId);
+            return Ok(watcherProfileData);
+        }
+
+        [HttpPut("save-changes")]
+        public async Task<ActionResult<bool>> SaveChanges(WatcherProfileDataDto watcherProfileDataDto)
+        {
+            bool savedChanges = await _watcherService.SaveChangesAsync(watcherProfileDataDto);
+            return Ok(savedChanges);
+        }
     }
 }

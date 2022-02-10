@@ -8,6 +8,7 @@ namespace Core.Repositories
     {
         Task<T> LoginAsync(string username, string password);
         Task<bool> ExistsUserAsync(string username);
+        Task<bool> ExistsUserAsync(int id, string username);
     }
 
     public abstract class UserRepository<T> : GenericRepository<T>, IUserRepository<T> where T : User
@@ -18,5 +19,6 @@ namespace Core.Repositories
 
         public abstract Task<T> LoginAsync(string username, string password);
         public abstract Task<bool> ExistsUserAsync(string username);
+        public abstract Task<bool> ExistsUserAsync(int id, string username);
     }
 }
