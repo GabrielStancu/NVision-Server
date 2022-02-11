@@ -15,6 +15,7 @@ namespace Core.Repositories
         Task<IEnumerable<Subject>> GetWatcherSubjectsAsync(int watcherId);
         Task<int> GetWatcherSubjectsCountAsync(int watcherId);
         Task<IEnumerable<Subject>> GetWatcherDashboardSubjectsAsync(int watcherId);
+        Task<Subject> GetSubjectWithWatcherAsync(int subjectId);
     }
 
     public class SubjectRepository : UserRepository<Subject>, ISubjectRepository
@@ -71,6 +72,14 @@ namespace Core.Repositories
                 .Take(_watcherDashboardSubjectsCount)
                 .ToListAsync();
             return subjects;
+        }
+
+        public async Task<Subject> GetSubjectWithWatcherAsync(int subjectId)
+        {
+            var subject = await Context.Subject
+                .Include(s => s.Watcher)
+                .FirstOrDefaultAsync(s => s.Id == subjectId);
+            return subject;
         }
     }
 }

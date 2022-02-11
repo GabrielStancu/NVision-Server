@@ -5,7 +5,7 @@ namespace Core.Models
 {
     public class Subject : User
     {
-        public int WatcherId { get; set; }
+        public int? WatcherId { get; set; }
         [ForeignKey("WatcherId")]
         [InverseProperty("Subjects")]
         public Watcher Watcher { get; set; }
@@ -16,7 +16,5 @@ namespace Core.Models
         public bool IsPatient { get; set; }
         public char Sex { get; set; }
         public string HealthStatus { get; set; }
-        [NotMapped]
-        public string FullName { get => $"{FirstName} {LastName}"; }
     }
 }

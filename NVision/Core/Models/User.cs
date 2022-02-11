@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Core.Models
 {
@@ -11,5 +12,7 @@ namespace Core.Models
         public string LastName { get; set; }
         public DateTime Birthday { get; set; }
         public string ProfilePictureSrc { get; set; }
+        [NotMapped]
+        public string FullName { get => $"{FirstName} {LastName}"; }
     }
 }

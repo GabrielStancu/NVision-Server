@@ -39,7 +39,7 @@ namespace Infrastructure.Services
             };           
             var healthAlert = new HealthAlert
             {
-                WatcherPhoneNumber = await _watcherRepository.GetWatcherPhoneNumberByIdAsync(subject.WatcherId),
+                WatcherPhoneNumber = await _watcherRepository.GetWatcherPhoneNumberByIdAsync(subject.WatcherId.Value),
                 Message = message
             };
 

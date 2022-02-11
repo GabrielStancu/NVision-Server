@@ -48,7 +48,7 @@ namespace API.Controllers
         }
 
         [HttpGet("profile-data/{watcherId}")]
-        public async Task<ActionResult<WatcherProfileDataDto>> GetProfilePicture(int watcherId)
+        public async Task<ActionResult<WatcherProfileDataDto>> GetProfileData(int watcherId)
         {
             var watcherProfileData = await _watcherService.GetProfileDataAsync(watcherId);
             return Ok(watcherProfileData);
