@@ -11,6 +11,7 @@ namespace Core.Repositories
             services.AddScoped<IWatcherRepository, WatcherRepository>();
             services.AddScoped<ISubjectRepository, SubjectRepository>();
             services.AddScoped<IAlertRepository, AlertRepository>();
+            services.AddScoped<IDeviceRepository, DeviceRepository>();
         }
     }
 }

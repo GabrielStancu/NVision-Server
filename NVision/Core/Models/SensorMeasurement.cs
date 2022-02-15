@@ -12,12 +12,19 @@ namespace Core.Models
         public double Value { get; set; }
         public DateTime Timestamp { get; set; }
         public SensorType SensorType { get; }
+        /// <summary>
+        /// The constructor that should be used across the app
+        /// </summary>
         public SensorMeasurement(SensorType sensorType)
         {
             SensorType = sensorType;
         }
+        /// <summary>
+        /// Used by EF-Core. This constructor should not be used across the app
+        /// </summary>
         public SensorMeasurement()
         {
+
         }
     }
 }

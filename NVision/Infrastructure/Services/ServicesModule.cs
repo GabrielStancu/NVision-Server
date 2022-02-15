@@ -13,6 +13,8 @@ namespace Infrastructure.Services
             services.AddScoped<IWatcherService, WatcherService>();
             services.AddScoped<IWatcherDashboardService, WatcherDashboardService>();
             services.AddScoped<ISubjectService, SubjectService>();
+
+            services.AddHostedService<MeasurementsMonitoringService>();
         }
     }
 }

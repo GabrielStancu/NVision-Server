@@ -7,6 +7,7 @@ namespace Infrastructure.Helpers
         public static void AddHelpers(this IServiceCollection services)
         {
             services.AddScoped<IProfilePictureUrlResolver, ProfilePictureUrlResolver>();
+            services.AddScoped<IReadingToMeasurementConverter, ReadingToMeasurementConverter>();
         }
     }
 }
