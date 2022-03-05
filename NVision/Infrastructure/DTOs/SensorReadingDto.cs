@@ -5,9 +5,9 @@ namespace Infrastructure.DTOs
 {
     public class SensorReadingDto
     {
-        public Guid DeviceSerialNumber { get; set; }
+        public string Type { get; set; }
         public double Value { get; set; }
-        public DateTime Timestamp { get; set; }
-        public SensorType SensorType { get; set; }
+        public string Timestamp { get; set; }
+        public Guid DeviceSerial { get; set; }
     }
 }

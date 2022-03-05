@@ -146,11 +146,12 @@ namespace Infrastructure.Services
                     {
                         Console.WriteLine($"Generating data for subject {subject.FirstName} {subject.LastName} for sensor {sensorType} at {startDate}");
                         int sign = new Random().NextDouble() >= 0.5 ? 1 : -1;
-                        var sensorMeasurement = new SensorMeasurement(sensorType);
+                        var sensorMeasurement = new SensorMeasurement();
 
                         sensorMeasurement.SubjectId = subject.Id;
                         sensorMeasurement.Timestamp = startDate;
                         sensorMeasurement.Value = lastMeasurement + sign * new Random().NextDouble() / 2;
+                        sensorMeasurement.SensorType = sensorType;
 
                         await _sensorMeasurementRepository.InsertAsync(sensorMeasurement);
                         startDate += sensorMeasurementPeriod;

@@ -1,6 +1,7 @@
 ﻿using Core.Models;
 using Core.Repositories;
 using Infrastructure.DTOs;
+using System;
 using System.Threading.Tasks;
 
 namespace Infrastructure.Helpers
@@ -20,12 +21,15 @@ namespace Infrastructure.Helpers
         }
         public async Task<SensorMeasurement> ConvertAsync(SensorReadingDto sensorReading)
         {
-            int subjectId = await _deviceRepository.GetOwnerSubjectIdAsync(sensorReading.DeviceSerialNumber);
-            return new SensorMeasurement(sensorReading.SensorType)
+            int subjectId = await _deviceRepository.GetOwnerSubjectIdAsync(sensorReading.DeviceSerial);
+            Enum.TryParse(sensorReading.Type.ToString(), out SensorType sensorType);
+
+            return new SensorMeasurement()
             {
                 SubjectId = subjectId,
-                Timestamp = sensorReading.Timestamp,
-                Value = sensorReading.Value
+                Timestamp = DateTime.Parse(sensorReading.Timestamp),
+                Value = sensorReading.Value,
+                SensorType = sensorType
             };
         }
     }
