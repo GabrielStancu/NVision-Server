@@ -13,7 +13,7 @@ namespace Infrastructure.Services
         Task<WatcherDashboardDataDto> GetWatcherDashboardDataAsync(int watcherId);
         Task<IEnumerable<AlertDto>> GetWatcherAlertsAsync(int watcherId);
         Task<bool> AnswerAlertAsync(AlertAnswerDto alertAnswerDto);
-        Task<IEnumerable<SubjectWithoutMeasurementsDto>> GetWatcherSubjectsAsync(int watcherId);
+        Task<IEnumerable<SubjectExtendedDataDto>> GetWatcherSubjectsAsync(int watcherId);
         Task<WatcherProfileDataDto> GetProfileDataAsync(int watcherId);
         Task<bool> SaveChangesAsync(WatcherProfileDataDto watcherProfile);
     }
@@ -65,15 +65,15 @@ namespace Infrastructure.Services
             return answeredAlert;
         }
 
-        public async Task<IEnumerable<SubjectWithoutMeasurementsDto>> GetWatcherSubjectsAsync(int watcherId)
+        public async Task<IEnumerable<SubjectExtendedDataDto>> GetWatcherSubjectsAsync(int watcherId)
         {
             var subjects = await _subjectRepository.GetWatcherSubjectsAsync(watcherId);
-            var subjectDtos = new List<SubjectWithoutMeasurementsDto>();
+            var subjectDtos = new List<SubjectExtendedDataDto>();
 
             foreach (var subject in subjects)
             {
                 subject.ProfilePictureSrc = _profilePictureUrlResolver.Resolve(subject);
-                subjectDtos.Add(_mapper.Map<Subject, SubjectWithoutMeasurementsDto>(subject));
+                subjectDtos.Add(_mapper.Map<Subject, SubjectExtendedDataDto>(subject));
             }
             return subjectDtos;
         }

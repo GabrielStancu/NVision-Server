@@ -2,7 +2,7 @@
 
 namespace Infrastructure.DTOs
 {
-    public class SubjectWithoutMeasurementsDto
+    public class SubjectExtendedDataDto
     {
         public int Id { get; set; }
         public string Username { get; set; }

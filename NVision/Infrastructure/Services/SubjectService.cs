@@ -4,7 +4,6 @@ using Core.Repositories;
 using Infrastructure.DTOs;
 using Infrastructure.Helpers;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Infrastructure.Services
@@ -13,23 +12,27 @@ namespace Infrastructure.Services
     {
         Task<SubjectProfileDataDto> GetProfileDataAsync(int subjectId);
         Task<bool> SaveChangesAsync(SubjectProfileDataDto subjectProfile);
+        Task<MeasurementsReplyDto> GetMeasurementsAsync(MeasurementsRequestDto request);
     }
 
     public class SubjectService : ISubjectService
     {
         private readonly ISubjectRepository _subjectRepository;
         private readonly IWatcherRepository _watcherRepository;
+        private readonly ISensorMeasurementRepository _sensorMeasurementRepository;
         private readonly IMapper _mapper;
         private readonly IProfilePictureUrlResolver _resolver;
 
         public SubjectService(
             ISubjectRepository subjectRepository, 
             IWatcherRepository watcherRepository,
+            ISensorMeasurementRepository sensorMeasurementRepository,
             IMapper mapper,
             IProfilePictureUrlResolver resolver)
         {
             _subjectRepository = subjectRepository;
             _watcherRepository = watcherRepository;
+            _sensorMeasurementRepository = sensorMeasurementRepository;
             _mapper = mapper;
             _resolver = resolver;
         }
@@ -58,6 +61,25 @@ namespace Infrastructure.Services
             subject.Watcher = null;
             await _subjectRepository.UpdateAsync(subject);
             return true;
+        }
+        public async Task<MeasurementsReplyDto> GetMeasurementsAsync(MeasurementsRequestDto request)
+        {
+            var subject = await _subjectRepository.SelectByIdAsync(request.SubjectId);
+            var measurements = await _sensorMeasurementRepository.GetFilteredMeasurementsAsync(request.SensorTypes, request.StartDate, request.EndDate);
+            var summarySubjectData = _mapper.Map<Subject, SubjectSummarizedDataDto>(subject);
+            var mappedMeasurements = new List<SensorMeasurementDto>();
+
+            foreach (var measurement in measurements)
+            {
+                var mappedMeasurement = _mapper.Map<SensorMeasurement, SensorMeasurementDto>(measurement);
+                mappedMeasurements.Add(mappedMeasurement);
+            }
+
+            return new MeasurementsReplyDto
+            {
+                SummarizedDataDto = summarySubjectData,
+                Measurements = mappedMeasurements
+            };
         }
     }
 }

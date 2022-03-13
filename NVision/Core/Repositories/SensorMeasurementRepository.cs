@@ -12,6 +12,7 @@ namespace Core.Repositories
     {
         Task<int> GetWatcherMeasurementsCountLastDaysAsync(int watcherId, int days = 7);
         Task<int> GetMeasuredSubjectsCountAsync(IEnumerable<Subject> subjects);
+        Task<IEnumerable<SensorMeasurement>> GetFilteredMeasurementsAsync(IEnumerable<SensorType> sensorTypes, DateTime startDate, DateTime endDate);
     }
 
     public class SensorMeasurementRepository : GenericRepository<SensorMeasurement>, ISensorMeasurementRepository
@@ -42,6 +43,16 @@ namespace Core.Repositories
                     count++;
             }
             return count;
+        }
+
+        public async Task<IEnumerable<SensorMeasurement>> GetFilteredMeasurementsAsync(IEnumerable<SensorType> sensorTypes, DateTime startDate, DateTime endDate)
+        {
+            var measurements = await Context.SensorMeasurement
+                .Where(m => m.Timestamp >= startDate && m.Timestamp <= endDate &&
+                       sensorTypes.ToList().Contains(m.SensorType))
+                .ToListAsync();
+
+            return measurements;
         }
     }  
 }

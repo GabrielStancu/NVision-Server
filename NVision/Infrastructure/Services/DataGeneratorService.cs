@@ -61,7 +61,8 @@ namespace Infrastructure.Services
                 Username = "GabiS",
                 Password = "Gabi_123!",
                 Birthday = new DateTime(1999, 04, 16),
-                PhoneNumber = "+40771699564"
+                PhoneNumber = "+40771699564",
+                ProfilePictureSrc = "grandfather.png"
             };
 
             var watcher2 = new Watcher
@@ -71,7 +72,8 @@ namespace Infrastructure.Services
                 Username = "AdiB",
                 Password = "Adi_123!",
                 Birthday = new DateTime(1999, 02, 09),
-                PhoneNumber = "+40789631783"
+                PhoneNumber = "+40789631783",
+                ProfilePictureSrc = "grandfather.png"
             };
 
             await _watcherRepository.InsertAsync(watcher1);
@@ -92,7 +94,8 @@ namespace Infrastructure.Services
                 Birthday = new DateTime(2000, 7, 9),
                 IsPatient = false,
                 HealthStatus = "Not assigned yet",
-                Sex = 'M'
+                Sex = 'M',
+                ProfilePictureSrc = "grandfather.png"
             };
 
             var subject2 = new Subject
@@ -106,7 +109,8 @@ namespace Infrastructure.Services
                 Birthday = new DateTime(1999, 9, 30),
                 IsPatient = true,
                 HealthStatus = "Not assigned yet",
-                Sex = 'M'
+                Sex = 'M',
+                ProfilePictureSrc = "patient.png"
             };
 
             var subject3 = new Subject
@@ -120,7 +124,8 @@ namespace Infrastructure.Services
                 Birthday = new DateTime(1999, 7, 5),
                 IsPatient = true,
                 HealthStatus = "Not assigned yet",
-                Sex = 'M'
+                Sex = 'M',
+                ProfilePictureSrc = "grandfather.png"
             };
 
             await _subjectRepository.InsertAsync(subject1);

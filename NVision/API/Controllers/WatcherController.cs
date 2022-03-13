@@ -41,7 +41,7 @@ namespace API.Controllers
         }
 
         [HttpGet("subjects/{watcherId}")]
-        public async Task<ActionResult<IEnumerable<SubjectWithoutMeasurementsDto>>> GetWatcherSubjects(int watcherId)
+        public async Task<ActionResult<IEnumerable<SubjectExtendedDataDto>>> GetWatcherSubjects(int watcherId)
         {
             var subjects = await _watcherService.GetWatcherSubjectsAsync(watcherId);
             return Ok(subjects);

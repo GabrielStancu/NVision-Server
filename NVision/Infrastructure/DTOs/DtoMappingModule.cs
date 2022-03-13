@@ -12,8 +12,8 @@ namespace Infrastructure.DTOs
             CreateMap<Subject, LoginResultDto>();
             CreateMap<UserRegisterRequestDto, Watcher>();
             CreateMap<UserRegisterRequestDto, Subject>();
-            CreateMap<Subject, SubjectWithoutMeasurementsDto>();
-            CreateMap<Subject, SubjectWithMeasurementsReplyDto>();
+            CreateMap<Subject, SubjectExtendedDataDto>();
+            CreateMap<Subject, SubjectSummarizedDataDto>();
             CreateMap<SensorMeasurement, SensorMeasurementDto>()
                 .ForMember(dest => dest.SensorName,
                     map => map.MapFrom(

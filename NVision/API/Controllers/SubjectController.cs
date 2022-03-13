@@ -33,11 +33,11 @@ namespace API.Controllers
         }
 
         [Authorize]
-        [HttpGet("health-data/{subjectId}")]
-        public async Task<ActionResult<object>> GetHealthData(int subjectId)
+        [HttpPost]
+        public async Task<ActionResult<MeasurementsReplyDto>> GetHealthData(MeasurementsRequestDto request)
         {
-            await Task.Delay(10);
-            return null;
+            var reply = await _subjectService.GetMeasurementsAsync(request);
+            return Ok(reply);
         }
     }
 }
