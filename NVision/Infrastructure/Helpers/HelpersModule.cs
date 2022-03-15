@@ -8,6 +8,7 @@ namespace Infrastructure.Helpers
         {
             services.AddScoped<IProfilePictureUrlResolver, ProfilePictureUrlResolver>();
             services.AddScoped<IReadingToMeasurementConverter, ReadingToMeasurementConverter>();
+            services.AddScoped<ISensorNameMapper, SensorNameMapper>();
         }
     }
 }

@@ -22,19 +22,22 @@ namespace Infrastructure.Services
         private readonly ISensorMeasurementRepository _sensorMeasurementRepository;
         private readonly IMapper _mapper;
         private readonly IProfilePictureUrlResolver _resolver;
+        private readonly ISensorNameMapper _sensorNameMapper;
 
         public SubjectService(
             ISubjectRepository subjectRepository, 
             IWatcherRepository watcherRepository,
             ISensorMeasurementRepository sensorMeasurementRepository,
             IMapper mapper,
-            IProfilePictureUrlResolver resolver)
+            IProfilePictureUrlResolver resolver,
+            ISensorNameMapper sensorNameMapper)
         {
             _subjectRepository = subjectRepository;
             _watcherRepository = watcherRepository;
             _sensorMeasurementRepository = sensorMeasurementRepository;
             _mapper = mapper;
             _resolver = resolver;
+            _sensorNameMapper = sensorNameMapper;
         }
         public async Task<SubjectProfileDataDto> GetProfileDataAsync(int subjectId)
         {
@@ -69,9 +72,11 @@ namespace Infrastructure.Services
             var summarySubjectData = _mapper.Map<Subject, SubjectSummarizedDataDto>(subject);
             var mappedMeasurements = new List<SensorMeasurementDto>();
 
+            summarySubjectData.ProfilePictureSrc = _resolver.Resolve(subject);
             foreach (var measurement in measurements)
             {
                 var mappedMeasurement = _mapper.Map<SensorMeasurement, SensorMeasurementDto>(measurement);
+                mappedMeasurement.SensorName = _sensorNameMapper.Map(mappedMeasurement.SensorType);
                 mappedMeasurements.Add(mappedMeasurement);
             }
 
