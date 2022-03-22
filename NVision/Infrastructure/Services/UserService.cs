@@ -2,6 +2,7 @@
 using Core.Models;
 using Core.Repositories;
 using Infrastructure.DTOs;
+using Infrastructure.Helpers;
 using System.Threading.Tasks;
 
 namespace Infrastructure.Services
@@ -16,12 +17,18 @@ namespace Infrastructure.Services
         private readonly IWatcherRepository _watcherRepository;
         private readonly ISubjectRepository _subjectRepository;
         private readonly IMapper _mapper;
+        private readonly IProfilePictureUrlResolver _resolver;
 
-        public UserService(IWatcherRepository watcherRepository, ISubjectRepository subjectRepository, IMapper mapper)
+        public UserService(
+            IWatcherRepository watcherRepository, 
+            ISubjectRepository subjectRepository, 
+            IMapper mapper,
+            IProfilePictureUrlResolver resolver)
         {
             _watcherRepository = watcherRepository;
             _subjectRepository = subjectRepository;
             _mapper = mapper;
+            _resolver = resolver;
         }
         public async Task<UserDisplayDataDto> GetUserDisplayDataAsync(UserDisplayDataRequestDto request)
         {
@@ -36,6 +43,7 @@ namespace Infrastructure.Services
         {
             var watcher = await _watcherRepository.SelectByIdAsync(id);
             var watcherData = _mapper.Map<Watcher, UserDisplayDataDto>(watcher);
+            watcherData.ProfilePictureSrc = _resolver.Resolve(watcher);
 
             return watcherData;
         }
@@ -43,6 +51,7 @@ namespace Infrastructure.Services
         {
             var subject = await _subjectRepository.SelectByIdAsync(id);
             var subjectData = _mapper.Map<Subject, UserDisplayDataDto>(subject);
+            subjectData.ProfilePictureSrc = _resolver.Resolve(subject);
 
             return subjectData;
         }
