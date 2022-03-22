@@ -76,7 +76,7 @@ namespace Infrastructure.Services
             foreach (var measurement in measurements)
             {
                 var mappedMeasurement = _mapper.Map<SensorMeasurement, SensorMeasurementDto>(measurement);
-                mappedMeasurement.SensorName = _sensorNameMapper.Map(mappedMeasurement.SensorType);
+                mappedMeasurement.SensorName = _sensorNameMapper.Map(mappedMeasurement.SensorType); 
                 mappedMeasurements.Add(mappedMeasurement);
             }
 

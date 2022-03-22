@@ -44,6 +44,8 @@ namespace Infrastructure.DTOs
                         src => $"{src.Watcher.FirstName} {src.Watcher.LastName}"))
                 .ReverseMap();
             CreateMap<Watcher, WatcherOptionDto>();
+            CreateMap<Watcher, UserDisplayDataDto>();
+            CreateMap<Subject, UserDisplayDataDto>();
         }
     }
 }

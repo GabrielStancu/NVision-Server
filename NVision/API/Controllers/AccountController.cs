@@ -16,15 +16,18 @@ namespace API.Controllers
     {
         private readonly ILoginService _loginService;
         private readonly IRegisterService _registerService;
+        private readonly IUserService _userService;
         private readonly IWebHostEnvironment _webHostEnvironment;
 
         public AccountController(
             ILoginService loginService,
             IRegisterService registerService,
+            IUserService userService,
             IWebHostEnvironment webHostEnvironment)
         {
             _loginService = loginService;
             _registerService = registerService;
+            _userService = userService;
             _webHostEnvironment = webHostEnvironment;
         }
 
@@ -70,6 +73,16 @@ namespace API.Controllers
             {
                 return new JsonResult(string.Empty);
             }
+        }
+
+        [HttpPost("displayData")]
+        public async Task<ActionResult<UserDisplayDataDto>> GetDisplayData(UserDisplayDataRequestDto request)
+        {
+            var userDisplayData = await _userService.GetUserDisplayDataAsync(request);
+
+            if (userDisplayData is not null)
+                return Ok(userDisplayData);
+            return NotFound("User not found");
         }
     }
 }
