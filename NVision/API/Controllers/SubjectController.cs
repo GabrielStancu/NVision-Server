@@ -39,5 +39,13 @@ namespace API.Controllers
             var reply = await _subjectService.GetMeasurementsAsync(request);
             return Ok(reply);
         }
+
+        [Authorize(Roles = "Watcher")]
+        [HttpPost("serial-number")]
+        public async Task<ActionResult<bool>> UpdateDeviceSerialNumber(UpdateSerialNumberRequest request)
+        {
+            var reply = await _subjectService.UpdateSerialNumberAsync(request);
+            return Ok(reply);
+        }
     }
 }

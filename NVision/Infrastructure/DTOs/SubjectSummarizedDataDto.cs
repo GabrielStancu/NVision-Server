@@ -10,5 +10,6 @@ namespace Infrastructure.DTOs
         public string ProfilePictureSrc { get; set; }
         public bool IsPatient { get; set; }
         public string HealthStatus { get; set; }
+        public string DeviceSerialNumber { get; set; }
     }
 }

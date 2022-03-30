@@ -13,6 +13,7 @@ namespace Infrastructure.Services
         Task<SubjectProfileDataDto> GetProfileDataAsync(int subjectId);
         Task<bool> SaveChangesAsync(SubjectProfileDataDto subjectProfile);
         Task<MeasurementsReplyDto> GetMeasurementsAsync(MeasurementsRequestDto request);
+        Task<bool> UpdateSerialNumberAsync(UpdateSerialNumberRequest request);
     }
 
     public class SubjectService : ISubjectService
@@ -20,6 +21,7 @@ namespace Infrastructure.Services
         private readonly ISubjectRepository _subjectRepository;
         private readonly IWatcherRepository _watcherRepository;
         private readonly ISensorMeasurementRepository _sensorMeasurementRepository;
+        private readonly IDeviceRepository _deviceRepository;
         private readonly IMapper _mapper;
         private readonly IProfilePictureUrlResolver _resolver;
         private readonly ISensorNameMapper _sensorNameMapper;
@@ -28,6 +30,7 @@ namespace Infrastructure.Services
             ISubjectRepository subjectRepository, 
             IWatcherRepository watcherRepository,
             ISensorMeasurementRepository sensorMeasurementRepository,
+            IDeviceRepository deviceRepository,
             IMapper mapper,
             IProfilePictureUrlResolver resolver,
             ISensorNameMapper sensorNameMapper)
@@ -35,6 +38,7 @@ namespace Infrastructure.Services
             _subjectRepository = subjectRepository;
             _watcherRepository = watcherRepository;
             _sensorMeasurementRepository = sensorMeasurementRepository;
+            _deviceRepository = deviceRepository;
             _mapper = mapper;
             _resolver = resolver;
             _sensorNameMapper = sensorNameMapper;
@@ -73,6 +77,7 @@ namespace Infrastructure.Services
             var mappedMeasurements = new List<SensorMeasurementDto>();
 
             summarySubjectData.ProfilePictureSrc = _resolver.Resolve(subject);
+            summarySubjectData.DeviceSerialNumber = await _deviceRepository.GetSubjectDeviceSerialNumberAsync(request.SubjectId);
             foreach (var measurement in measurements)
             {
                 var mappedMeasurement = _mapper.Map<SensorMeasurement, SensorMeasurementDto>(measurement);
@@ -85,6 +90,12 @@ namespace Infrastructure.Services
                 SummarizedDataDto = summarySubjectData,
                 Measurements = mappedMeasurements
             };
+        }
+
+        public async Task<bool> UpdateSerialNumberAsync(UpdateSerialNumberRequest request)
+        {
+            var result = await _deviceRepository.UpdateSerialNumberAsync(request.SubjectId, request.SerialNumber);
+            return result;
         }
     }
 }

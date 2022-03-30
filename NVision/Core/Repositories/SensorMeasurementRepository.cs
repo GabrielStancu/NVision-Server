@@ -37,7 +37,7 @@ namespace Core.Repositories
             foreach (var subject in subjects)
             {
                 var measurements = await Context.SensorMeasurement
-                                       .Where(sm => sm.SubjectId == subject.Id)
+                                       .Where(sm => sm.SubjectId == subject.Id && sm.Timestamp.Date == DateTime.Now.Date) 
                                        .ToListAsync();
                 if (measurements.Count > 0)
                     count++;

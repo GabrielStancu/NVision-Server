@@ -46,7 +46,7 @@ namespace Core.Repositories
         {
             var alerts = await Context.Alert
                 .Include(a => a.Subject)
-                .Where(a => a.Subject.WatcherId == watcherId)
+                .Where(a => a.Subject.WatcherId == watcherId && a.Timestamp.AddDays(days) >= System.DateTime.Now)
                 .ToListAsync();
 
             return alerts.Count;
