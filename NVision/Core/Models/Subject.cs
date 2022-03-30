@@ -13,8 +13,8 @@ namespace Core.Models
         public string Address { get; set; }
         [InverseProperty("Subject")]
         public IEnumerable<SensorMeasurement> SensorMeasurements { get; set; }
-        public bool IsPatient { get; set; }
-        public char Sex { get; set; }
+        public bool? IsPatient { get; set; }
+        public char? Sex { get; set; }
         public string HealthStatus { get; set; }
     }
 }

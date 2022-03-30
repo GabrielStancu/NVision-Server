@@ -9,5 +9,6 @@ namespace Infrastructure.DTOs
         public UserType UserType { get; set; }
         public string ProfilePictureSrc { get; set; }
         public string Token { get; set;  }
+        public bool CompleteProfile { get; set; }
     }
 }

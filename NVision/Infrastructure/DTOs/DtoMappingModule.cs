@@ -8,8 +8,15 @@ namespace Infrastructure.DTOs
         private string _sensorMeasurementPrefix = "SensorMeasurement";
         public DtoMappingModule()
         {
-            CreateMap<Watcher, LoginResultDto>();
-            CreateMap<Subject, LoginResultDto>();
+            CreateMap<Watcher, LoginResultDto>()
+                .ForMember(dest => dest.CompleteProfile,
+                    map => map.MapFrom(
+                        src => !string.IsNullOrEmpty(src.PhoneNumber)));
+            CreateMap<Subject, LoginResultDto>()
+                .ForMember(dest => dest.CompleteProfile,
+                    map => map.MapFrom(
+                        src => !string.IsNullOrEmpty(src.Address) && src.WatcherId != null
+                                && src.Sex != null && src.IsPatient != null));
             CreateMap<UserRegisterRequestDto, Watcher>();
             CreateMap<UserRegisterRequestDto, Subject>();
             CreateMap<Subject, SubjectExtendedDataDto>();

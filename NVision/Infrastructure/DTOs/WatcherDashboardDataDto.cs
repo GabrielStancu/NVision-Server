@@ -18,6 +18,7 @@ namespace Infrastructure.DTOs
 
     public class DashboardSubjectDataDto
     {
+        public int Id { get; set; }
         public string Name { get; set; }
         public string HealthStatus { get; set; }
         public string ProfilePictureSrc { get; set; }
