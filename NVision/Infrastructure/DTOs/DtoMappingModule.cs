@@ -53,6 +53,7 @@ namespace Infrastructure.DTOs
             CreateMap<Watcher, WatcherOptionDto>();
             CreateMap<Watcher, UserDisplayDataDto>();
             CreateMap<Subject, UserDisplayDataDto>();
+            CreateMap<Subject, SubjectDeviceDataDto>();
         }
     }
 }

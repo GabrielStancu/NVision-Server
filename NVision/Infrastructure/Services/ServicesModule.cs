@@ -14,6 +14,7 @@ namespace Infrastructure.Services
             services.AddScoped<IWatcherDashboardService, WatcherDashboardService>();
             services.AddScoped<ISubjectService, SubjectService>();
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IDeviceService, DeviceService>();
 
             services.AddHostedService<MeasurementsMonitoringService>();
         }

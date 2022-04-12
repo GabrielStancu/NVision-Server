@@ -48,7 +48,7 @@ namespace Core.Repositories
         public async Task<IEnumerable<SensorMeasurement>> GetFilteredMeasurementsAsync(IEnumerable<SensorType> sensorTypes, DateTime startDate, DateTime endDate)
         {
             var measurements = await Context.SensorMeasurement
-                .Where(m => m.Timestamp >= startDate && m.Timestamp <= endDate &&
+                .Where(m => m.Timestamp.Date >= startDate.Date && m.Timestamp.Date <= endDate.Date &&
                        sensorTypes.ToList().Contains(m.SensorType))
                 .ToListAsync();
 
