@@ -2,13 +2,15 @@
 using Core.Repositories;
 using Infrastructure.DTOs;
 using Infrastructure.Helpers;
+using System.Collections.Generic;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace Infrastructure.Services
 {
     public interface IAlertingService
     {
-        Task<HealthAlert> CreateAlertAsync(AlertDto alertDto);
+        Task<HealthAlert> CreateAlertAsync(DeviceAlertDto alertDto);
     }
 
     public class AlertingService : IAlertingService
@@ -16,27 +18,31 @@ namespace Infrastructure.Services
         private readonly IWatcherRepository _watcherRepository;
         private readonly ISubjectRepository _subjectRepository;
         private readonly IAlertRepository _alertRepository;
+        private readonly IDeviceRepository _deviceRepository;
 
         public AlertingService(
             IWatcherRepository watcherRepository,
             ISubjectRepository subjectRepository,
-            IAlertRepository alertRepository)
+            IAlertRepository alertRepository,
+            IDeviceRepository deviceRepository)
         {
             _watcherRepository = watcherRepository;
             _subjectRepository = subjectRepository;
             _alertRepository = alertRepository;
+            _deviceRepository = deviceRepository;
         }
 
-        public async Task<HealthAlert> CreateAlertAsync(AlertDto alertDto)
+        public async Task<HealthAlert> CreateAlertAsync(DeviceAlertDto alertDto)
         {
-            var subject = await _subjectRepository.SelectByIdAsync(alertDto.SubjectId);
-            var message = $"An alert was detected for {subject.FirstName} {subject.LastName} in {alertDto.Timestamp.ToShortDateString()} at {alertDto.Timestamp.ToLongTimeString()}. The remote monitoring hub detected the following issue: <{alertDto.Message}>.";
+            var subjectId = await _deviceRepository.GetOwnerSubjectIdAsync(alertDto.DeviceSerialNumber);
+            var subject = await _subjectRepository.SelectByIdAsync(subjectId);
+            var message = BuildMessage(subject, alertDto);
             var alert = new Alert
             {
                 SubjectId = subject.Id,
                 Message = message,
                 WasTrueAlert = null
-            };           
+            };
             var healthAlert = new HealthAlert
             {
                 WatcherPhoneNumber = await _watcherRepository.GetWatcherPhoneNumberByIdAsync(subject.WatcherId.Value),
@@ -46,6 +52,51 @@ namespace Infrastructure.Services
             await _alertRepository.InsertAsync(alert);
 
             return healthAlert;
+        }
+
+        private string BuildMessage(Subject subject, DeviceAlertDto alertDto)
+        {
+            var message = $"An alert was detected for {subject.FirstName} {subject.LastName} in {alertDto.AlertMoment.ToShortDateString()} " +
+                $"at {alertDto.AlertMoment.ToLongTimeString()}. The remote monitoring hub detected the following issue" +
+                $"{((alertDto.Parameters as List<ParameterDto>).Count > 1 ? "s" : "")}: " +
+                $"[{ParametersToMessage(alertDto.Parameters)}]. Please contact a specialized medic.";
+            // TODO: make a dictionary with combinations of parameters to produce a diagnostic - if possible
+            return message;
+        }
+
+        private string ParametersToMessage(IEnumerable<ParameterDto> parameters)
+        {
+            var sb = new StringBuilder();
+            foreach (var parameter in parameters)
+            {
+                sb.Append(parameter.Increasing ? "Increasing " : "Decreasing ");
+                var code = StringToEnumParser<SensorType>.ToEnum(parameter.Code);
+                var parameterMessage = ParameterToMessage(code);
+                sb.Append(parameterMessage);
+                sb.Append("; ");
+            }
+            sb.Remove(sb.Length - 2, 2);
+
+            return sb.ToString();
+        }
+
+        private string ParameterToMessage(SensorType code)
+        {
+            switch (code)
+            {
+                case SensorType.Temperature:
+                    return "temperature";
+                case SensorType.ECG:
+                    return "electrocardiogram";
+                case SensorType.Pulse:
+                    return "pulse";
+                case SensorType.OxygenSaturation:
+                    return "oxygen saturation";
+                case SensorType.GSR:
+                    return "galvanic skin response";
+                default:
+                    return "unknown parameter";
+            }
         }
     }
 }

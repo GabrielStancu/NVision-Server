@@ -16,7 +16,7 @@ namespace API.Hubs
             _alertingService = alertingService;
         }
 
-        public async Task<MessageResource.StatusEnum> SendAlertAsync(AlertDto alertDto)
+        public async Task<MessageResource.StatusEnum> SendAlertAsync(DeviceAlertDto alertDto)
         {
             var accountSid = ConfigurationManager.GetAccountSid();
             var authToken = ConfigurationManager.GetAuthToken();
@@ -26,10 +26,10 @@ namespace API.Hubs
             var to = alert.WatcherPhoneNumber;
             var from = new PhoneNumber(ConfigurationManager.GetSenderPhoneNumber());
             var message = MessageResource.Create(
-                to: to,
-                from: from,
-                body: alert.Message
-            );
+                    to: to,
+                    from: from,
+                    body: alert.Message
+                );
 
             return message.Status;
         }
