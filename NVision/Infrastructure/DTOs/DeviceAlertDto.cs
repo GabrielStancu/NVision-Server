@@ -5,8 +5,8 @@ namespace Infrastructure.DTOs
 {
     public class DeviceAlertDto
     {
-        public Guid DeviceSerialNumber { get; set; }
+        public string DeviceSerialNumber { get; set; }
         public DateTime AlertMoment { get; set; }
-        public IEnumerable<ParameterDto> Parameters { get; set; }
+        public string[] Parameters { get; set; }
     }
 }

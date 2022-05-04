@@ -1,4 +1,3 @@
-using API.Hubs;
 using API.Security;
 using Core.Contexts;
 using Core.Repositories;
@@ -37,10 +36,9 @@ namespace API
             {
                 opt.AddPolicy("CorsPolicy", policy =>
                 {
-                    policy.WithOrigins("https://localhost:4200")
+                    policy.AllowAnyOrigin()
                           .AllowAnyMethod()
-                          .AllowAnyHeader()
-                          .AllowCredentials();
+                          .AllowAnyHeader();
                 });
             });
 
@@ -98,7 +96,6 @@ namespace API
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
-                endpoints.MapHub<AlertHub>("/alert");
             });
 
             app.UseSwagger();
