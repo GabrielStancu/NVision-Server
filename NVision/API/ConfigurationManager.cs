@@ -30,7 +30,8 @@ namespace API
 
         public static string GetAudience()
         {
-            return IsDevelopmentEnv ? AppSetting["JWS-Dev:audienceAddress"] : AppSetting["JWS-Prod:audienceAddress"];
+            var audience = IsDevelopmentEnv ? AppSetting["JWS-Dev:audienceAddress"] : AppSetting["JWS-Prod:audienceAddress"];
+            return audience;
         }
 
         public static string GetAccountSid()

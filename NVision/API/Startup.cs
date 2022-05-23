@@ -34,9 +34,16 @@ namespace API
             // Enable CORS
             services.AddCors(opt =>
             {
-                opt.AddPolicy("CorsPolicy", policy =>
+                opt.AddPolicy("ClientPolicy", policy =>
                 {
-                    policy.AllowAnyOrigin()
+                    policy.WithOrigins("https://192.168.241.247:4200")
+                          .AllowAnyMethod()
+                          .AllowAnyHeader()
+                          .AllowCredentials();
+                });
+                opt.AddPolicy("DevicePolicy", policy =>
+                {
+                    policy.WithOrigins("https://192.168.241.129")
                           .AllowAnyMethod()
                           .AllowAnyHeader();
                 });
@@ -64,7 +71,6 @@ namespace API
                 ConfigurationManager.GetAudience(),
                 ConfigurationManager.GetKey());
 
-
             // Controllers
             services.AddControllers().AddNewtonsoftJson();
 
@@ -87,7 +93,8 @@ namespace API
 
             app.UseRouting();
 
-            app.UseCors("CorsPolicy");
+            app.UseCors("ClientPolicy");
+            app.UseCors("DevicePolicy");
 
             app.UseAuthentication();
 

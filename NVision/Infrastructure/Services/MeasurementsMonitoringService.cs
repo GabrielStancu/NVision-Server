@@ -29,14 +29,14 @@ namespace Infrastructure.Services
             var factory = new ConnectionFactory() { Uri = new Uri(_queueUri) };
             using var connection = factory.CreateConnection();
             using var channel = connection.CreateModel();
-            channel.QueueDeclare(queue: "healthHubQueue",
+            channel.QueueDeclare(queue: "measurements",
                                  durable: true,
                                  exclusive: false,
                                  autoDelete: false,
                                  arguments: null);
             var consumer = new EventingBasicConsumer(channel);
             consumer.Received += async (model, ea) => await OnMessageReceived(model, ea);
-            channel.BasicConsume(queue: "healthHubQueue", autoAck: true, consumer: consumer);
+            channel.BasicConsume(queue: "measurements", autoAck: true, consumer: consumer);
 
             while (!stoppingToken.IsCancellationRequested)
             {
