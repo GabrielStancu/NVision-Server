@@ -48,14 +48,17 @@ namespace Infrastructure.Services
         {
             var body = ea.Body.ToArray();
             var message = Encoding.UTF8.GetString(body);
-            var sensorReading = JsonConvert.DeserializeObject<SensorReadingDto>(message);
+            var measurementsBatch = JsonConvert.DeserializeObject<MeasurementsBatchDto>(message);
 
             using var scope = _factory.CreateScope();
             var sensorMeasurementRepository = scope.ServiceProvider.GetRequiredService<ISensorMeasurementRepository>();
             var readingToMeasurementConverter = scope.ServiceProvider.GetRequiredService<IReadingToMeasurementConverter>();
-            var sensorMeasurement = await readingToMeasurementConverter.ConvertAsync(sensorReading);
 
-            await sensorMeasurementRepository.InsertAsync(sensorMeasurement);
+            foreach (var record in measurementsBatch.Records)
+            {
+                var sensorMeasurement = await readingToMeasurementConverter.ConvertAsync(record, measurementsBatch.DeviceSerial);
+                await sensorMeasurementRepository.InsertAsync(sensorMeasurement);
+            }
         }
     }
 }

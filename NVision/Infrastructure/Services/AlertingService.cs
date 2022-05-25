@@ -43,6 +43,7 @@ namespace Infrastructure.Services
             {
                 SubjectId = subject.Id,
                 Message = message,
+                Timestamp = alertDto.AlertMoment,
                 WasTrueAlert = null
             };
             var healthAlert = new HealthAlert

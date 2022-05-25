@@ -11,7 +11,7 @@ namespace Core.Repositories
     {
         Task<IEnumerable<Alert>> GetWatcherAlertsAsync(int watcherId);
         Task<IEnumerable<Alert>> GetWatcherDashboardAlertsAsync(int watcherId);
-        Task<int> GetWatcherAlertsCountAsync(int watcherId, int days = 7);
+        Task<int> GetWatcherAlertsCountAsync(int watcherId);
         Task<bool> AnswerAlertAsync(int alertId, bool wasTrueAlert);
     }
 
@@ -27,6 +27,7 @@ namespace Core.Repositories
             var alerts = await Context.Alert
                 .Include(a => a.Subject)
                 .Where(a => a.Subject.WatcherId == watcherId)
+                .OrderByDescending(a => a.Timestamp)
                 .ToListAsync();
             return alerts;
         }
@@ -42,11 +43,11 @@ namespace Core.Repositories
             return alerts;
         }
 
-        public async Task<int> GetWatcherAlertsCountAsync(int watcherId, int days = 7)
+        public async Task<int> GetWatcherAlertsCountAsync(int watcherId)
         {
             var alerts = await Context.Alert
                 .Include(a => a.Subject)
-                .Where(a => a.Subject.WatcherId == watcherId && a.Timestamp.AddDays(days) >= System.DateTime.Now)
+                .Where(a => a.Subject.WatcherId == watcherId && a.Timestamp.Date == System.DateTime.Now.Date)
                 .ToListAsync();
 
             return alerts.Count;

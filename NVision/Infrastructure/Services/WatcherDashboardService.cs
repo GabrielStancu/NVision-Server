@@ -60,7 +60,7 @@ namespace Infrastructure.Services
                 new DashboardCardDataDto
                 {
                     NumericValue = await GetWatcherMeasurementsAsync(watcherId),
-                    PropertyName = "Measurements This Week"
+                    PropertyName = "Measurements Today"
                 },
                 new DashboardCardDataDto
                 {

@@ -8,7 +8,7 @@ namespace Infrastructure.Helpers
 {
     public interface IReadingToMeasurementConverter
     {
-        Task<SensorMeasurement> ConvertAsync(SensorReadingDto sensorReading);
+        Task<SensorMeasurement> ConvertAsync(SensorReadingDto sensorReading, Guid deviceSerialNumber);
     }
 
     public class ReadingToMeasurementConverter : IReadingToMeasurementConverter
@@ -19,9 +19,9 @@ namespace Infrastructure.Helpers
         {
             _deviceRepository = deviceRepository;
         }
-        public async Task<SensorMeasurement> ConvertAsync(SensorReadingDto sensorReading)
+        public async Task<SensorMeasurement> ConvertAsync(SensorReadingDto sensorReading, Guid deviceSerialNumber)
         {
-            int subjectId = await _deviceRepository.GetOwnerSubjectIdAsync(sensorReading.DeviceSerial);
+            int subjectId = await _deviceRepository.GetOwnerSubjectIdAsync(deviceSerialNumber);
             var sensorType = StringToEnumParser<SensorType>.ToEnum(sensorReading.Type);
 
             return new SensorMeasurement()
