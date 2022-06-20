@@ -71,22 +71,14 @@ namespace Infrastructure.Services
         private string ParametersToMessage(IEnumerable<string> parameters)
         {
             var sb = new StringBuilder();
-            //foreach (var parameter in parameters)
-            //{
-            //    var parameterMessage = CodesDiagnose.ContainsKey(parameter)
-            //        ? CodesDiagnose[parameter] : "Unknown issue";
-            //    sb.Append(parameterMessage);
-            //    sb.Append("; ");
-            //}
-            //sb.Remove(sb.Length - 2, 2);
-            var parameterMessage0 = CodesDiagnose.ContainsKey(parameters.ToList()[0])
-                    ? CodesDiagnose[parameters.ToList()[0]] : "Unknown issue";
-            sb.Append(parameterMessage0);
-            sb.Append("; ");
-            var parameterMessage2 = CodesDiagnose.ContainsKey(parameters.ToList()[2])
-                    ? CodesDiagnose[parameters.ToList()[2]] : "Unknown issue";
-            sb.Append(parameterMessage2);
-            // sb.Append("; ");
+            foreach (var parameter in parameters)
+            {
+                var parameterMessage = CodesDiagnose.ContainsKey(parameter)
+                    ? CodesDiagnose[parameter] : "Unknown issue";
+                sb.Append(parameterMessage);
+                sb.Append("; ");
+            }
+            sb.Remove(sb.Length - 2, 2);
 
             return sb.ToString();
         }
