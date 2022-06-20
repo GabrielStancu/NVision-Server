@@ -27,7 +27,7 @@ namespace Infrastructure.Helpers
             return new SensorMeasurement()
             {
                 SubjectId = subjectId,
-                Timestamp = sensorReading.Timestamp,
+                Timestamp = DateTime.Parse(sensorReading.Timestamp).ToUniversalTime(),
                 Value = sensorReading.Value,
                 SensorType = sensorType
             };

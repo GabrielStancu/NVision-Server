@@ -6,6 +6,6 @@ namespace Infrastructure.DTOs
     {
         public string Type { get; set; }
         public double Value { get; set; }
-        public DateTime Timestamp { get; set; }
+        public string Timestamp { get; set; }
     }
 }

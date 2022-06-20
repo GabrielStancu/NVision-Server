@@ -43,7 +43,7 @@ namespace Infrastructure.Services
             {
                 SubjectId = subject.Id,
                 Message = message,
-                Timestamp = alertDto.AlertMoment,
+                Timestamp = alertDto.AlertMoment.ToUniversalTime(),
                 WasTrueAlert = null
             };
             var healthAlert = new HealthAlert
@@ -59,11 +59,11 @@ namespace Infrastructure.Services
 
         private string BuildMessage(Subject subject, DeviceAlertDto alertDto)
         {
-            var message = $"An alert was detected for {subject.FirstName} {subject.LastName} in {alertDto.AlertMoment.ToShortDateString()} " +
-                $"at {alertDto.AlertMoment.ToLongTimeString()}. The remote monitoring hub detected issues with the following parameter" +
+            var utcAlertMoment = alertDto.AlertMoment.ToUniversalTime();
+            var message = $"An alert was detected for {subject.FirstName} {subject.LastName} in {utcAlertMoment.ToShortDateString()} " +
+                $"at {utcAlertMoment.ToLongTimeString()} (UTC). The remote monitoring hub detected issues with the following parameter" +
                 $"{(alertDto.Parameters.Length > 1 ? "s" : "")}: " +
                 $"[{ParametersToMessage(alertDto.Parameters)}]. Please contact a specialized medic.";
-            // TODO: make a dictionary with combinations of parameters to produce a diagnostic - if possible
             return message;
         }
 
