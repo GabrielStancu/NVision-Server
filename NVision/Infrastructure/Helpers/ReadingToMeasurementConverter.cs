@@ -32,7 +32,5 @@ namespace Infrastructure.Helpers
                 SensorType = sensorType
             };
         }
-
-        
     }
 }
