@@ -3,6 +3,7 @@ using Core.Models;
 using Core.Repositories;
 using Infrastructure.DTOs;
 using Infrastructure.Helpers;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -10,7 +11,7 @@ namespace Infrastructure.Services
 {
     public interface IWatcherDashboardService
     {
-        Task<WatcherDashboardDataDto> GetWatcherDashboardDataAsync(int watcherId);
+        Task<WatcherDashboardDataDto> GetWatcherDashboardDataAsync(WatcherTimeDto watcherTime);
     }
     public class WatcherDashboardService : IWatcherDashboardService
     {
@@ -34,11 +35,11 @@ namespace Infrastructure.Services
             _mapper = mapper;
         }
 
-        public async Task<WatcherDashboardDataDto> GetWatcherDashboardDataAsync(int watcherId)
+        public async Task<WatcherDashboardDataDto> GetWatcherDashboardDataAsync(WatcherTimeDto watcherTime)
         {
-            var cards = await GetDashboardCardsAsync(watcherId);
-            var subjects = await GetDashboardSubjectsAsync(watcherId);
-            var alerts = await GetDashboardAlertsAsync(watcherId);
+            var cards = await GetDashboardCardsAsync(watcherTime);
+            var subjects = await GetDashboardSubjectsAsync(watcherTime.WatcherId);
+            var alerts = await GetDashboardAlertsAsync(watcherTime.WatcherId);
 
             return new WatcherDashboardDataDto
             {
@@ -48,28 +49,28 @@ namespace Infrastructure.Services
             };
         }
 
-        private async Task<IEnumerable<DashboardCardDataDto>> GetDashboardCardsAsync(int watcherId)
+        private async Task<IEnumerable<DashboardCardDataDto>> GetDashboardCardsAsync(WatcherTimeDto watcherTime)
         {
             return new List<DashboardCardDataDto>
             {
                 new DashboardCardDataDto
                 {
-                    NumericValue = await GetWatchedSubjectsCountAsync(watcherId),
+                    NumericValue = await GetWatchedSubjectsCountAsync(watcherTime.WatcherId),
                     PropertyName = "Watched Subjects"
                 },
                 new DashboardCardDataDto
                 {
-                    NumericValue = await GetWatcherMeasurementsAsync(watcherId),
+                    NumericValue = await GetWatcherMeasurementsAsync(watcherTime),
                     PropertyName = "Measurements Today"
                 },
                 new DashboardCardDataDto
                 {
-                    NumericValue = await GetWatcherAlertsCountAsync(watcherId),
+                    NumericValue = await GetWatcherAlertsCountAsync(watcherTime),
                     PropertyName = "Alerts This Week"
                 },
                 new DashboardCardDataDto
                 {
-                    NumericValue = await GetWatcherMeasuredSubjectsCountAsync(watcherId),
+                    NumericValue = await GetWatcherMeasuredSubjectsCountAsync(watcherTime),
                     PropertyName = "Subjects Measured Today"
                 }
             };
@@ -110,22 +111,22 @@ namespace Infrastructure.Services
             return count;
         }
 
-        private async Task<int> GetWatcherMeasurementsAsync(int watcherId)
+        private async Task<int> GetWatcherMeasurementsAsync(WatcherTimeDto watcherTime)
         {
-            int count = await _sensorMeasurementRepository.GetWatcherMeasurementsCountLastDaysAsync(watcherId);
+            int count = await _sensorMeasurementRepository.GetWatcherMeasurementsCountLastDaysAsync(watcherTime.WatcherId, watcherTime.CurrentDate);
             return count;
         }
 
-        private async Task<int> GetWatcherAlertsCountAsync(int watcherId)
+        private async Task<int> GetWatcherAlertsCountAsync(WatcherTimeDto watcherTime)
         {
-            int count = await _alertRepository.GetWatcherAlertsCountAsync(watcherId);
+            int count = await _alertRepository.GetWatcherAlertsCountAsync(watcherTime.WatcherId, watcherTime.CurrentDate);
             return count;
         }
 
-        private async Task<int> GetWatcherMeasuredSubjectsCountAsync(int watcherId)
+        private async Task<int> GetWatcherMeasuredSubjectsCountAsync(WatcherTimeDto watcherTime)
         {
-            var subjects = await _subjectRepository.GetWatcherSubjectsAsync(watcherId);
-            var count = await _sensorMeasurementRepository.GetMeasuredSubjectsCountAsync(subjects);
+            var subjects = await _subjectRepository.GetWatcherSubjectsAsync(watcherTime.WatcherId);
+            var count = await _sensorMeasurementRepository.GetMeasuredSubjectsCountAsync(subjects, watcherTime.CurrentDate);
             return count;
         }
     }

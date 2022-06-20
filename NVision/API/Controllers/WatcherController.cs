@@ -19,10 +19,10 @@ namespace API.Controllers
             _watcherService = watcherService;
         }
 
-        [HttpGet("{watcherId}")]
-        public async Task<ActionResult<WatcherDashboardDataDto>> GetWatcherDashboardData(int watcherId)
+        [HttpPost("dashboard")]
+        public async Task<ActionResult<WatcherDashboardDataDto>> GetWatcherDashboardData(WatcherTimeDto watcherTime)
         {
-            var watcherDashboardDataDto = await _watcherService.GetWatcherDashboardDataAsync(watcherId);
+            var watcherDashboardDataDto = await _watcherService.GetWatcherDashboardDataAsync(watcherTime);
             return Ok(watcherDashboardDataDto);
         }
 

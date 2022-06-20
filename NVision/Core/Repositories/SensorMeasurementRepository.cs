@@ -10,9 +10,9 @@ namespace Core.Repositories
 {
     public interface ISensorMeasurementRepository : IGenericRepository<SensorMeasurement>
     {
-        Task<int> GetWatcherMeasurementsCountLastDaysAsync(int watcherId, int days = 7);
-        Task<int> GetMeasuredSubjectsCountAsync(IEnumerable<Subject> subjects);
-        Task<IEnumerable<SensorMeasurement>> GetFilteredMeasurementsAsync(IEnumerable<SensorType> sensorTypes, DateTime startDate, DateTime endDate);
+        Task<int> GetWatcherMeasurementsCountLastDaysAsync(int watcherId, DateTime crtDate, int days = 1);
+        Task<int> GetMeasuredSubjectsCountAsync(IEnumerable<Subject> subjects, DateTime crtDate);
+        Task<IEnumerable<SensorMeasurement>> GetFilteredMeasurementsAsync(IEnumerable<SensorType> sensorTypes, int subjectId, DateTime startDate, DateTime endDate);
     }
 
     public class SensorMeasurementRepository : GenericRepository<SensorMeasurement>, ISensorMeasurementRepository
@@ -21,35 +21,34 @@ namespace Core.Repositories
         {
         }
 
-        public async Task<int> GetWatcherMeasurementsCountLastDaysAsync(int watcherId, int days = 7)
+        public async Task<int> GetWatcherMeasurementsCountLastDaysAsync(int watcherId, DateTime crtDate, int days = 1)
         {
             var measurements = await Context.SensorMeasurement
                 .Include(sm => sm.Subject)
-                .Where(sm => sm.Subject.WatcherId == watcherId && sm.Timestamp.AddDays(days) >= DateTime.Now)
+                .Where(sm => sm.Subject.WatcherId == watcherId && sm.Timestamp.AddDays(days) >= crtDate)
                 .ToListAsync();
 
             return measurements.Count;
         }
 
-        public async Task<int> GetMeasuredSubjectsCountAsync(IEnumerable<Subject> subjects)
+        public async Task<int> GetMeasuredSubjectsCountAsync(IEnumerable<Subject> subjects, DateTime crtDate)
         {
             int count = 0;
             foreach (var subject in subjects)
             {
-                var measurements = await Context.SensorMeasurement
-                                       .Where(sm => sm.SubjectId == subject.Id && sm.Timestamp.Date == DateTime.Now.Date) 
-                                       .ToListAsync();
-                if (measurements.Count > 0)
+                var hasMeasurements = await Context.SensorMeasurement
+                                       .AnyAsync(sm => sm.SubjectId == subject.Id && sm.Timestamp.AddDays(1) >= crtDate);
+                if (hasMeasurements)
                     count++;
             }
             return count;
         }
 
-        public async Task<IEnumerable<SensorMeasurement>> GetFilteredMeasurementsAsync(IEnumerable<SensorType> sensorTypes, DateTime startDate, DateTime endDate)
+        public async Task<IEnumerable<SensorMeasurement>> GetFilteredMeasurementsAsync(IEnumerable<SensorType> sensorTypes, int subjectId, DateTime startDate, DateTime endDate)
         {
             var measurements = await Context.SensorMeasurement
                 .Where(m => m.Timestamp.Date >= startDate.Date && m.Timestamp.Date <= endDate.Date &&
-                       sensorTypes.ToList().Contains(m.SensorType))
+                       sensorTypes.ToList().Contains(m.SensorType) && m.SubjectId == subjectId)
                 .ToListAsync();
 
             return measurements;

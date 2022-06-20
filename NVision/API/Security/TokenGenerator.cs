@@ -26,7 +26,7 @@ namespace API.Security
                 issuer: issuer,
                 audience: audience,
                 claims: claims,
-                expires: DateTime.Now.AddHours(6),
+                expires: DateTime.UtcNow.AddHours(6),
                 signingCredentials: signinCredentials
             );
             string tokenString = new JwtSecurityTokenHandler().WriteToken(tokenOptions);

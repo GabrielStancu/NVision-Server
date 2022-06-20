@@ -10,7 +10,7 @@ namespace Infrastructure.Services
 {
     public interface IWatcherService
     {
-        Task<WatcherDashboardDataDto> GetWatcherDashboardDataAsync(int watcherId);
+        Task<WatcherDashboardDataDto> GetWatcherDashboardDataAsync(WatcherTimeDto watcherTime);
         Task<IEnumerable<AlertDto>> GetWatcherAlertsAsync(int watcherId);
         Task<bool> AnswerAlertAsync(AlertAnswerDto alertAnswerDto);
         Task<IEnumerable<SubjectExtendedDataDto>> GetWatcherSubjectsAsync(int watcherId);
@@ -42,9 +42,9 @@ namespace Infrastructure.Services
             _profilePictureUrlResolver = profilePictureUrlResolver;
             _mapper = mapper;
         }
-        public async Task<WatcherDashboardDataDto> GetWatcherDashboardDataAsync(int watcherId)
+        public async Task<WatcherDashboardDataDto> GetWatcherDashboardDataAsync(WatcherTimeDto watcherTime)
         {
-            var dashboardData = await _watcherDashboardService.GetWatcherDashboardDataAsync(watcherId);
+            var dashboardData = await _watcherDashboardService.GetWatcherDashboardDataAsync(watcherTime);
             return dashboardData;
         }
         public async Task<IEnumerable<AlertDto>> GetWatcherAlertsAsync(int watcherId)

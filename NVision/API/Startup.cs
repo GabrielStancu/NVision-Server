@@ -36,14 +36,14 @@ namespace API
             {
                 opt.AddPolicy("ClientPolicy", policy =>
                 {
-                    policy.WithOrigins("https://192.168.151.247:4200")
+                    policy.WithOrigins("https://192.168.220.247:4200")
                           .AllowAnyMethod()
                           .AllowAnyHeader()
                           .AllowCredentials();
                 });
                 opt.AddPolicy("DevicePolicy", policy =>
                 {
-                    policy.WithOrigins("https://192.168.151.129")
+                    policy.WithOrigins("https://192.168.95.129")
                           .AllowAnyMethod()
                           .AllowAnyHeader();
                 });

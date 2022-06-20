@@ -72,7 +72,7 @@ namespace Infrastructure.Services
         public async Task<MeasurementsReplyDto> GetMeasurementsAsync(MeasurementsRequestDto request)
         {
             var subject = await _subjectRepository.SelectByIdAsync(request.SubjectId);
-            var measurements = await _sensorMeasurementRepository.GetFilteredMeasurementsAsync(request.SensorTypes, request.StartDate, request.EndDate);
+            var measurements = await _sensorMeasurementRepository.GetFilteredMeasurementsAsync(request.SensorTypes, subject.Id, request.StartDate, request.EndDate);
             var summarySubjectData = _mapper.Map<Subject, SubjectSummarizedDataDto>(subject);
             var mappedMeasurements = new List<SensorMeasurementDto>();
 

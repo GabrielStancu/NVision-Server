@@ -1,6 +1,7 @@
 ﻿using Core.Contexts;
 using Core.Models;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -11,7 +12,7 @@ namespace Core.Repositories
     {
         Task<IEnumerable<Alert>> GetWatcherAlertsAsync(int watcherId);
         Task<IEnumerable<Alert>> GetWatcherDashboardAlertsAsync(int watcherId);
-        Task<int> GetWatcherAlertsCountAsync(int watcherId);
+        Task<int> GetWatcherAlertsCountAsync(int watcherId, DateTime crtDate);
         Task<bool> AnswerAlertAsync(int alertId, bool wasTrueAlert);
     }
 
@@ -43,11 +44,11 @@ namespace Core.Repositories
             return alerts;
         }
 
-        public async Task<int> GetWatcherAlertsCountAsync(int watcherId)
+        public async Task<int> GetWatcherAlertsCountAsync(int watcherId, DateTime crtDate)
         {
             var alerts = await Context.Alert
                 .Include(a => a.Subject)
-                .Where(a => a.Subject.WatcherId == watcherId && a.Timestamp.Date == System.DateTime.Now.Date)
+                .Where(a => a.Subject.WatcherId == watcherId && a.Timestamp.Date.AddDays(7) >= crtDate.Date)
                 .ToListAsync();
 
             return alerts.Count;

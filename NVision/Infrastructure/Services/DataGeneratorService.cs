@@ -136,7 +136,7 @@ namespace Infrastructure.Services
         private async Task GenerateSensorMeasurementsAsync()
         {
             var subjects = (await _subjectRepository.SelectAllAsync()).ToList();
-            var crtDate = DateTime.Now;
+            var crtDate = DateTime.UtcNow;
 
             foreach (var subject in subjects)
             {
