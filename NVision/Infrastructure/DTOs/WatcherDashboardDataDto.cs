@@ -22,6 +22,7 @@ namespace Infrastructure.DTOs
         public string Name { get; set; }
         public string HealthStatus { get; set; }
         public string ProfilePictureSrc { get; set; }
+        public int HealthScore { get; set; }
     }
 
     public class DashboardAlertDataDto

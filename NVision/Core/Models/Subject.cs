@@ -16,5 +16,6 @@ namespace Core.Models
         public bool? IsPatient { get; set; }
         public char? Sex { get; set; }
         public string HealthStatus { get; set; }
+        public int HealthScore { get; set; }
     }
 }

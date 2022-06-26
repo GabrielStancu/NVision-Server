@@ -36,7 +36,7 @@ namespace API
             {
                 opt.AddPolicy("ClientPolicy", policy =>
                 {
-                    policy.WithOrigins("https://192.168.220.247:4200")
+                    policy.WithOrigins("https://192.168.243.247:4200")
                           .AllowAnyMethod()
                           .AllowAnyHeader()
                           .AllowCredentials();
